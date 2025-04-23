@@ -1,5 +1,7 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+
+// Components
 import Navbar from './components/navigation/Navbar';
 import Footer from './components/layout/Footer';
 
@@ -20,10 +22,22 @@ import AdminDashboard from './components/dashboard/AdminDashboard';
 import UserManagement from './components/dashboard/UserManagement';
 import FreelancerManagement from './components/dashboard/FreelancerManagement';
 
+// ScrollToTop component
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 const App = () => {
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
+        <ScrollToTop />
         <Navbar />
         <main className="flex-grow">
           <Routes>
