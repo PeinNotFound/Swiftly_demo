@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaEdit, FaTrash, FaSearch, FaFilter, FaCheck, FaTimes, FaStar } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaSearch, FaFilter, FaCheck, FaStar } from 'react-icons/fa';
 
 const FreelancerManagement = () => {
   // Demo freelancers data

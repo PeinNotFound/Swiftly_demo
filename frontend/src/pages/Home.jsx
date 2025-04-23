@@ -156,46 +156,68 @@ const Home = () => {
 
           {/* Company Logos */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors">
+            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors group">
               <img 
                 src="https://www.vectorlogo.zone/logos/google/google-ar21.svg" 
                 alt="Google logo" 
-                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                className="h-12 w-auto brightness-150 hover:brightness-200 transition-all duration-300 filter-none"
+                style={{
+                  filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5)) brightness(1.5)'
+                }}
               />
             </div>
-            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors">
+            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors group">
               <img 
                 src="https://www.vectorlogo.zone/logos/microsoft/microsoft-ar21.svg" 
                 alt="Microsoft logo" 
-                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                className="h-12 w-auto brightness-150 hover:brightness-200 transition-all duration-300 filter-none"
+                style={{
+                  filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5)) brightness(1.5)'
+                }}
               />
             </div>
-            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors">
+            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors group">
               <img 
                 src="https://www.vectorlogo.zone/logos/amazon/amazon-ar21.svg" 
                 alt="Amazon logo" 
-                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                className="h-12 w-auto brightness-150 hover:brightness-200 transition-all duration-300 filter-none"
+                style={{
+                  filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5)) brightness(1.5)'
+                }}
               />
             </div>
-            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors">
-              <img 
-                src="https://brandlogos.net/wp-content/uploads/2021/10/meta-logo-512x512.png"
-                alt="Meta logo" 
-                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity invert"
-              />
+            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors group">
+              <div className="relative">
+                <img 
+                  src="https://brandlogos.net/wp-content/uploads/2021/10/meta-logo-512x512.png"
+                  alt="Meta logo" 
+                  className="h-12 w-auto transition-all duration-300 invert"
+                  style={{
+                    filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5)) brightness(2)'
+                  }}
+                />
+              </div>
             </div>
-            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Apple_logo_white.svg/505px-Apple_logo_white.svg.png"
-                alt="Apple logo" 
-                className="h-10 w-auto opacity-70 hover:opacity-100 transition-opacity"
-              />
+            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors group">
+              <div className="relative">
+                <img 
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Apple_logo_white.svg/505px-Apple_logo_white.svg.png"
+                  alt="Apple logo" 
+                  className="h-10 w-auto transition-all duration-300"
+                  style={{
+                    filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5)) brightness(2)'
+                  }}
+                />
+              </div>
             </div>
-            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors">
+            <div className="flex flex-col items-center justify-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-800 transition-colors group">
               <img 
                 src="https://www.vectorlogo.zone/logos/netflix/netflix-ar21.svg" 
                 alt="Netflix logo" 
-                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                className="h-12 w-auto brightness-150 hover:brightness-200 transition-all duration-300 filter-none"
+                style={{
+                  filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5)) brightness(1.5)'
+                }}
               />
             </div>
           </div>
