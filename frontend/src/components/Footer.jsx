@@ -70,12 +70,7 @@ const Footer = () => {
                   <span>Find Jobs</span>
                 </Link>
               </li>
-              <li>
-                <Link to="/resources" className="text-gray-400 hover:text-yellow-400 transition-colors duration-200 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-yellow-400 rounded-full opacity-0 transition-opacity duration-200"></span>
-                  <span>Resources</span>
-                </Link>
-              </li>
+             
             </ul>
           </div>
           
@@ -100,12 +95,7 @@ const Footer = () => {
                   <span>Find Freelancers</span>
                 </Link>
               </li>
-              <li>
-                <Link to="/pricing" className="text-gray-400 hover:text-yellow-400 transition-colors duration-200 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-yellow-400 rounded-full opacity-0 transition-opacity duration-200"></span>
-                  <span>Pricing</span>
-                </Link>
-              </li>
+              
             </ul>
           </div>
         </div>

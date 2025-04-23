@@ -1,16 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-  const [scrollPosition, setScrollPosition] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollPosition(window.scrollY);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const features = [
     {
@@ -73,14 +64,7 @@ const Home = () => {
     { number: '24/7', label: 'Support Available' },
   ];
 
-  const trustedCompanies = [
-    { name: 'Google', logo: '🌐' },
-    { name: 'Microsoft', logo: '🪟' },
-    { name: 'Amazon', logo: '📦' },
-    { name: 'Meta', logo: '📱' },
-    { name: 'Apple', logo: '🍎' },
-    { name: 'Netflix', logo: '🎬' },
-  ];
+  
 
   return (
     <div className="min-h-screen">

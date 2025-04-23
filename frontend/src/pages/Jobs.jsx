@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiSearch, FiFilter, FiClock, FiMapPin, FiDollarSign, FiBriefcase, FiStar } from 'react-icons/fi';
+import { FiSearch, FiFilter, FiClock, FiMapPin, FiDollarSign, FiBriefcase } from 'react-icons/fi';
 
 const Jobs = () => {
   const [searchQuery, setSearchQuery] = useState('');
