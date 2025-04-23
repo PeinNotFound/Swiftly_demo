@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaEdit, FaTrash, FaSearch, FaFilter } from 'react-icons/fa';
 
 const UserManagement = () => {
+  // Demo users data
   const [users, setUsers] = useState([
     {
       id: 1,
@@ -65,7 +66,7 @@ const UserManagement = () => {
           </div>
         </div>
 
-        {/* la bare de filtration */}
+        {/* Search and Filter Bar */}
         <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
           <div className="flex items-center gap-4">
             <div className="flex-1 relative">
@@ -154,7 +155,7 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* modification */}
+      {/* Edit Modal */}
       {editingUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-2xl w-[480px] shadow-2xl">

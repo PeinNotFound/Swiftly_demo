@@ -7,8 +7,10 @@ const Navbar = () => {
   const location = useLocation();
 
   // TODO: Replace with actual auth state
-  const isAuthenticated = false;
-  const user = null;
+  const isAuthenticated = true;
+  const user = {
+    avatar: 'https://via.placeholder.com/40',
+  };
 
   const isActivePath = (path) => {
     return location.pathname === path;
