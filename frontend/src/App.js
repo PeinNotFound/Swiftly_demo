@@ -13,6 +13,8 @@ import JobDetail from './pages/JobDetail';
 import Jobs from './pages/Jobs';
 import FreelancerDashboard from './components/dashboards/FreelancerDashboard';
 import AdminDashboard from './components/dashboards/AdminDashboard';
+import UserManagement from './components/dashboards/UserManagement';
+import FreelancerManagement from './components/dashboards/FreelancerManagement';
 
 const App = () => {
   return (
@@ -32,6 +34,8 @@ const App = () => {
             <Route path="/job/:id" element={<JobDetail />} />
             <Route path="/dashboard/freelancer" element={<FreelancerDashboard />} />
             <Route path="/dashboard/admin" element={<AdminDashboard />} />
+            <Route path="/dashboard/admin/users" element={<UserManagement />} />
+            <Route path="/dashboard/admin/freelancers" element={<FreelancerManagement />} />
           </Routes>
         </main>
         <Footer />
