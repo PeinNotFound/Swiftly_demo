@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaEdit, FaTrash, FaSearch, FaFilter, FaCheck, FaTimes, FaStar } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaSearch, FaFilter, FaCheck, FaStar } from 'react-icons/fa';
 
 const FreelancerManagement = () => {
   // Demo freelancers data
@@ -84,7 +84,7 @@ const FreelancerManagement = () => {
           </div>
         </div>
 
-        {/* Search and Filter Bar */}
+        {/* Bar de recherch */}
         <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
           <div className="flex items-center gap-4">
             <div className="flex-1 relative">
@@ -103,7 +103,7 @@ const FreelancerManagement = () => {
           </div>
         </div>
 
-        {/* Freelancers Table */}
+        {/* la list des freelanceres */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -191,7 +191,7 @@ const FreelancerManagement = () => {
         </div>
       </div>
 
-      {/* Edit Modal */}
+      {/* formulaire de update un freelancer */}
       {editingFreelancer && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-2xl w-[480px] shadow-2xl">
