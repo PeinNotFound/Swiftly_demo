@@ -1,69 +1,153 @@
 import React from 'react';
+import { FiTarget, FiUsers, FiAward, FiTrendingUp } from 'react-icons/fi';
 
 const About = () => {
+  const stats = [
+    { label: 'Active Freelancers', value: '50K+', icon: FiUsers },
+    { label: 'Projects Completed', value: '100K+', icon: FiAward },
+    { label: 'Client Satisfaction', value: '98%', icon: FiTarget },
+    { label: 'Growth YoY', value: '125%', icon: FiTrendingUp },
+  ];
+
+  const values = [
+    {
+      title: 'Innovation',
+      description: 'We constantly push boundaries to create better ways of connecting talent with opportunity.',
+    },
+    {
+      title: 'Quality',
+      description: 'We maintain high standards in every aspect of our platform and service delivery.',
+    },
+    {
+      title: 'Integrity',
+      description: 'We operate with complete transparency and honesty in all our dealings.',
+    },
+    {
+      title: 'Community',
+      description: 'We foster a supportive environment where freelancers and clients can thrive together.',
+    },
+  ];
+
+  const team = [
+    {
+      name: 'Sarah Johnson',
+      role: 'CEO & Co-founder',
+      image: 'https://randomuser.me/api/portraits/women/1.jpg',
+    },
+    {
+      name: 'Michael Chen',
+      role: 'CTO & Co-founder',
+      image: 'https://randomuser.me/api/portraits/men/1.jpg',
+    },
+    {
+      name: 'Emily Rodriguez',
+      role: 'Head of Operations',
+      image: 'https://randomuser.me/api/portraits/women/2.jpg',
+    },
+    {
+      name: 'David Kim',
+      role: 'Head of Product',
+      image: 'https://randomuser.me/api/portraits/men/2.jpg',
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">About Swiftly</h1>
+    <div className="min-h-screen bg-black pt-24 px-4 sm:px-6 lg:px-8">
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto mb-20 text-center">
+        <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+          About Swiftly
+        </h1>
+        <p className="text-gray-400 text-xl max-w-3xl mx-auto">
+          We're revolutionizing the way talent connects with opportunity. Our platform brings together the world's best freelancers with innovative companies.
+        </p>
+      </div>
+
+      {/* Stats Section */}
+      <div className="max-w-7xl mx-auto mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <div
+              key={index}
+              className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-800 hover:border-yellow-400/50 transition-all duration-300"
+            >
+              <div className="w-12 h-12 bg-yellow-400/10 rounded-xl flex items-center justify-center mb-4">
+                <stat.icon className="h-6 w-6 text-yellow-400" />
+              </div>
+              <div className="text-3xl font-bold text-white mb-2">{stat.value}</div>
+              <div className="text-gray-400">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Mission Section */}
+      <div className="max-w-7xl mx-auto mb-20">
+        <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 md:p-12 border border-gray-800">
+          <h2 className="text-3xl font-bold text-white mb-6">Our Mission</h2>
+          <p className="text-gray-400 text-lg mb-8">
+            At Swiftly, we believe in creating a world where talent knows no boundaries. Our mission is to empower freelancers and businesses alike by providing a platform that makes collaboration seamless, secure, and successful. We're committed to fostering a global community where skills are valued, opportunities are abundant, and success is achievable for everyone.
+          </p>
           
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-semibold mb-4">Our Mission</h2>
-            <p className="text-gray-700 mb-4">
-              At Swiftly, we believe in connecting talented freelancers with businesses that need their expertise. 
-              Our platform makes it easy to find the right person for your project or to showcase your skills to potential clients.
-            </p>
-            <p className="text-gray-700">
-              We're committed to creating a community where quality work is recognized and rewarded, 
-              and where both freelancers and clients can thrive.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {values.map((value, index) => (
+              <div key={index} className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+                <h3 className="text-xl font-semibold text-yellow-400 mb-3">{value.title}</h3>
+                <p className="text-gray-400">{value.description}</p>
+              </div>
+            ))}
           </div>
-          
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-semibold mb-4">Our Story</h2>
-            <p className="text-gray-700 mb-4">
-              Swiftly was founded in 2023 by a team of freelancers who understood the challenges of finding quality work 
-              and reliable clients. We built this platform to solve those problems and create a better experience for everyone.
+        </div>
+      </div>
+
+      {/* Team Section */}
+      <div className="max-w-7xl mx-auto mb-20">
+        <h2 className="text-3xl font-bold text-white mb-12 text-center">Meet Our Leadership</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {team.map((member, index) => (
+            <div
+              key={index}
+              className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-800 hover:border-yellow-400/50 transition-all duration-300 group"
+            >
+              <div className="relative mb-6">
+                <div className="aspect-w-1 aspect-h-1">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover rounded-xl"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-xl"></div>
+              </div>
+              <h3 className="text-xl font-semibold text-white group-hover:text-yellow-400 transition-colors">
+                {member.name}
+              </h3>
+              <p className="text-gray-400">{member.role}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="max-w-7xl mx-auto mb-20">
+        <div className="bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 rounded-2xl p-12 text-center relative overflow-hidden">
+          <div className="relative z-10">
+            <h2 className="text-3xl font-bold text-white mb-6">
+              Ready to Join Our Community?
+            </h2>
+            <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+              Whether you're a freelancer looking for exciting projects or a business seeking top talent, Swiftly is here to help you succeed.
             </p>
-            <p className="text-gray-700">
-              What started as a small community has grown into a global marketplace for talent, 
-              connecting thousands of freelancers with businesses worldwide.
-            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02]">
+                Join as Freelancer
+              </button>
+              <button className="px-8 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl font-medium transition-all duration-200">
+                Hire Talent
+              </button>
+            </div>
           </div>
-          
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Our Values</h2>
-            <ul className="space-y-4">
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">✓</span>
-                <div>
-                  <h3 className="font-medium">Quality</h3>
-                  <p className="text-gray-600">We prioritize high-quality work and professional relationships.</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">✓</span>
-                <div>
-                  <h3 className="font-medium">Transparency</h3>
-                  <p className="text-gray-600">Clear communication and honest feedback are essential to our community.</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">✓</span>
-                <div>
-                  <h3 className="font-medium">Community</h3>
-                  <p className="text-gray-600">We foster a supportive environment where everyone can succeed.</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">✓</span>
-                <div>
-                  <h3 className="font-medium">Innovation</h3>
-                  <p className="text-gray-600">We continuously improve our platform to better serve our users.</p>
-                </div>
-              </li>
-            </ul>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/5 to-yellow-600/5 transform rotate-12"></div>
         </div>
       </div>
     </div>
