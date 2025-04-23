@@ -44,12 +44,19 @@ const Navbar = () => {
               <Link to="/jobs" className={navLinkClasses("/jobs")}>
                 Find Jobs
               </Link>
+              <Link to="/dashboard/freelancer" className={navLinkClasses("/dashboard/freelancer")}>
+              Freelancer Dashbord
+              </Link>
+              <Link to="/dashboard/admin" className={navLinkClasses("/dashboard/admin")}>
+              Admin Dashbord
+              </Link>
               <Link to="/about" className={navLinkClasses("/about")}>
                 About
               </Link>
               <Link to="/contact" className={navLinkClasses("/contact")}>
                 Contact
               </Link>
+              
             </div>
           </div>
 

@@ -11,6 +11,8 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import JobDetail from './pages/JobDetail';
 import Jobs from './pages/Jobs';
+import FreelancerDashboard from './components/dashboards/FreelancerDashboard';
+import AdminDashboard from './components/dashboards/AdminDashboard';
 
 const App = () => {
   return (
@@ -28,6 +30,8 @@ const App = () => {
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/job/:id" element={<JobDetail />} />
+            <Route path="/dashboard/freelancer" element={<FreelancerDashboard />} />
+            <Route path="/dashboard/admin" element={<AdminDashboard />} />
           </Routes>
         </main>
         <Footer />
