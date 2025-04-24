@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FiSearch, FiFilter, FiClock, FiMapPin, FiDollarSign, FiBriefcase } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const Jobs = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -222,7 +223,7 @@ const Jobs = () => {
 
             <div className="mt-6 flex justify-end">
               <button className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02]">
-                Apply Now
+              <Link to={`/job/${job.id}`}>Details</Link>
               </button>
             </div>
           </div>

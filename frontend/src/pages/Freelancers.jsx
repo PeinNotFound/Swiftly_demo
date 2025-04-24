@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FiSearch, FiFilter, FiStar, FiMapPin, FiDollarSign } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const Freelancers = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -192,7 +193,7 @@ const Freelancers = () => {
             </div>
 
             <button className="mt-6 w-full py-3 px-4 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02]">
-              View Profile
+            <Link to={`/freelancer/${freelancer.id}`}>View Profile</Link>
             </button>
           </div>
         ))}

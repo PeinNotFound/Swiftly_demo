@@ -79,7 +79,7 @@ const Register = () => {
                       Full Name
                     </label>
                     <div className="mt-1">
-                      <input
+                      <input 
                         id="name"
                         name="name"
                         type="text"
