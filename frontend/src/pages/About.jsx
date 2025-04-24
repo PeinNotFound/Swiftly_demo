@@ -56,7 +56,7 @@ const About = () => {
     <div className="min-h-screen bg-black pt-24 px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto mb-20 text-center">
-        <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+        <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-yellow-400 to-yellow-600 pb-10 bg-clip-text text-transparent">
           About Swiftly
         </h1>
         <p className="text-gray-400 text-xl max-w-3xl mx-auto">

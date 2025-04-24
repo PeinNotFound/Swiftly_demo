@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { FiStar, FiMapPin, FiDollarSign, FiMail, FiMessageSquare } from 'react-icons/fi';
+import { FiStar, FiMapPin, FiDollarSign } from 'react-icons/fi';
 
 const FreelancerProfile = () => {
   const { id } = useParams();
@@ -15,7 +15,7 @@ const FreelancerProfile = () => {
       hourlyRate: 85,
       location: 'San Francisco, CA',
       skills: ['Figma', 'Adobe XD', 'Prototyping', 'User Research'],
-      image: 'https://randomuser.me/api/portraits/women/1.jpg',
+      image: 'https://randomuser.me/api/portraits/women/44.jpg',
       about: `I am a passionate UI/UX designer with expertise in creating beautiful and intuitive user interfaces. 
       I specialize in user-centered design principles and have worked with various clients to deliver exceptional digital experiences.`,
       experience: [
@@ -76,7 +76,7 @@ const FreelancerProfile = () => {
       hourlyRate: 95,
       location: 'New York, NY',
       skills: ['React', 'Node.js', 'Python', 'AWS'],
-      image: 'https://randomuser.me/api/portraits/men/2.jpg',
+      image: 'https://randomuser.me/api/portraits/men/32.jpg',
       about: `I am a full-stack developer with expertise in building scalable web applications. 
       I specialize in modern JavaScript frameworks and cloud technologies, delivering robust solutions for businesses of all sizes.`,
       experience: [
@@ -259,7 +259,7 @@ const FreelancerProfile = () => {
       hourlyRate: 55,
       location: 'London, UK',
       skills: ['Copywriting', 'Blog Writing', 'Technical Writing', 'SEO'],
-      image: 'https://randomuser.me/api/portraits/women/5.jpg',
+      image: 'https://randomuser.me/api/portraits/women/68.jpg',
       about: `I am a professional content writer with expertise in creating engaging and SEO-optimized content. 
       I specialize in blog writing, technical documentation, and marketing copy that drives results.`,
       experience: [
@@ -372,7 +372,7 @@ const FreelancerProfile = () => {
           date: '2023-11-20',
         },
       ],
-    }
+    },
   ];
 
   const freelancer = freelancers.find(f => f.id === parseInt(id)) || freelancers[0];
@@ -383,12 +383,12 @@ const FreelancerProfile = () => {
       <div className="max-w-7xl mx-auto">
         <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800 mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
-            <img
-              src={freelancer.image}
-              alt={freelancer.name}
+          <img
+            src={freelancer.image}
+            alt={freelancer.name}
               className="w-32 h-32 rounded-xl object-cover border-2 border-yellow-400"
-            />
-            <div className="flex-grow">
+          />
+          <div className="flex-grow">
               <h1 className="text-3xl font-bold text-white mb-2">{freelancer.name}</h1>
               <p className="text-xl text-gray-400 mb-4">{freelancer.title}</p>
               <div className="flex items-center space-x-6 mb-4">
@@ -404,18 +404,18 @@ const FreelancerProfile = () => {
                   <FiDollarSign className="mr-1" />
                   <span>${freelancer.hourlyRate}/hr</span>
                 </div>
-              </div>
+            </div>
               <div className="flex flex-wrap gap-2 mb-6">
-                {freelancer.skills.map((skill, index) => (
-                  <span
-                    key={index}
+              {freelancer.skills.map((skill, index) => (
+                <span
+                  key={index}
                     className="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-sm"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-              <div className="flex items-center gap-4">
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+            {/* <div className="flex items-center gap-4">
                 <button className="bg-yellow-400 text-black px-6 py-3 rounded-xl font-medium hover:bg-yellow-500 transition-all duration-200 transform hover:scale-[1.02]">
                   <FiMail className="inline-block mr-2" />
                   Contact
@@ -424,88 +424,88 @@ const FreelancerProfile = () => {
                   <FiMessageSquare className="inline-block mr-2" />
                   Message
                 </button>
-              </div>
+            </div> */}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Content */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* About Section */}
+            <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800">
+              <h2 className="text-2xl font-bold text-white mb-4">About</h2>
+              <p className="text-gray-400 whitespace-pre-line">{freelancer.about}</p>
+          </div>
+
+          {/* Experience Section */}
+            <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800">
+              <h2 className="text-2xl font-bold text-white mb-4">Experience</h2>
+            <div className="space-y-6">
+              {freelancer.experience.map((exp, index) => (
+                  <div key={index} className="border-l-4 border-yellow-400 pl-4">
+                    <h3 className="font-semibold text-lg text-white">{exp.title}</h3>
+                    <p className="text-gray-400">{exp.company}</p>
+                  <p className="text-gray-500 text-sm mb-2">{exp.period}</p>
+                    <p className="text-gray-400">{exp.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Portfolio Section */}
+            <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800">
+              <h2 className="text-2xl font-bold text-white mb-4">Portfolio</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {freelancer.portfolio.map((item, index) => (
+                  <div key={index} className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-yellow-400/50 transition-all duration-300">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-48 object-cover"
+                  />
+                    <div className="p-6">
+                      <h3 className="font-semibold text-lg text-white mb-2">{item.title}</h3>
+                      <p className="text-gray-400 mb-4">{item.description}</p>
+                    <a
+                      href={item.link}
+                        className="text-yellow-400 hover:text-yellow-500 transition-colors"
+                    >
+                      View Project →
+                    </a>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* About Section */}
-            <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800">
-              <h2 className="text-2xl font-bold text-white mb-4">About</h2>
-              <p className="text-gray-400 whitespace-pre-line">{freelancer.about}</p>
-            </div>
-
-            {/* Experience Section */}
-            <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800">
-              <h2 className="text-2xl font-bold text-white mb-4">Experience</h2>
-              <div className="space-y-6">
-                {freelancer.experience.map((exp, index) => (
-                  <div key={index} className="border-l-4 border-yellow-400 pl-4">
-                    <h3 className="font-semibold text-lg text-white">{exp.title}</h3>
-                    <p className="text-gray-400">{exp.company}</p>
-                    <p className="text-gray-500 text-sm mb-2">{exp.period}</p>
-                    <p className="text-gray-400">{exp.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Portfolio Section */}
-            <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800">
-              <h2 className="text-2xl font-bold text-white mb-4">Portfolio</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {freelancer.portfolio.map((item, index) => (
-                  <div key={index} className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-yellow-400/50 transition-all duration-300">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="p-6">
-                      <h3 className="font-semibold text-lg text-white mb-2">{item.title}</h3>
-                      <p className="text-gray-400 mb-4">{item.description}</p>
-                      <a
-                        href={item.link}
-                        className="text-yellow-400 hover:text-yellow-500 transition-colors"
-                      >
-                        View Project →
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-8">
-            {/* Education Section */}
+        {/* Sidebar */}
+        <div className="space-y-8">
+          {/* Education Section */}
             <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800">
               <h2 className="text-2xl font-bold text-white mb-4">Education</h2>
-              <div className="space-y-4">
-                {freelancer.education.map((edu, index) => (
+            <div className="space-y-4">
+              {freelancer.education.map((edu, index) => (
                   <div key={index} className="border-l-4 border-yellow-400 pl-4">
                     <h3 className="font-semibold text-white">{edu.degree}</h3>
                     <p className="text-gray-400">{edu.school}</p>
-                    <p className="text-gray-500 text-sm">{edu.year}</p>
-                  </div>
-                ))}
-              </div>
+                  <p className="text-gray-500 text-sm">{edu.year}</p>
+                </div>
+              ))}
             </div>
+          </div>
 
-            {/* Reviews Section */}
+          {/* Reviews Section */}
             <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800">
               <h2 className="text-2xl font-bold text-white mb-4">Reviews</h2>
-              <div className="space-y-4">
-                {freelancer.reviews.map((review, index) => (
+            <div className="space-y-4">
+              {freelancer.reviews.map((review, index) => (
                   <div key={index} className="border-b border-gray-800 pb-4 last:border-b-0">
-                    <div className="flex items-center mb-2">
+                  <div className="flex items-center mb-2">
                       <span className="font-semibold text-white">{review.client}</span>
-                      <div className="ml-auto flex items-center">
-                        <span className="text-yellow-400">★</span>
+                    <div className="ml-auto flex items-center">
+                      <span className="text-yellow-400">★</span>
                         <span className="ml-1 text-white">{review.rating}</span>
                       </div>
                     </div>
@@ -513,7 +513,7 @@ const FreelancerProfile = () => {
                     <p className="text-gray-500 text-sm">{review.date}</p>
                   </div>
                 ))}
-              </div>
+                </div>
             </div>
           </div>
         </div>

@@ -17,7 +17,7 @@ const Freelancers = () => {
       hourlyRate: 85,
       location: 'San Francisco, CA',
       skills: ['Figma', 'Adobe XD', 'Prototyping', 'User Research'],
-      image: 'https://randomuser.me/api/portraits/women/1.jpg',
+      image: 'https://randomuser.me/api/portraits/women/44.jpg',
     },
     {
       id: 2,
@@ -27,7 +27,7 @@ const Freelancers = () => {
       hourlyRate: 95,
       location: 'New York, NY',
       skills: ['React', 'Node.js', 'Python', 'AWS'],
-      image: 'https://randomuser.me/api/portraits/men/2.jpg',
+      image: 'https://randomuser.me/api/portraits/men/32.jpg',
     },
     {
       id: 3,
@@ -57,7 +57,7 @@ const Freelancers = () => {
       hourlyRate: 55,
       location: 'London, UK',
       skills: ['Copywriting', 'Blog Writing', 'Technical Writing', 'SEO'],
-      image: 'https://randomuser.me/api/portraits/women/5.jpg',
+      image: 'https://randomuser.me/api/portraits/women/68.jpg',
     },
     {
       id: 6,
