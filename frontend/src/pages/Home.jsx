@@ -219,7 +219,7 @@ const Home = () => {
                   filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.5)) brightness(1.5)'
                 }}
               />
-            </div>
+              </div>
           </div>
         </div>
       </section>

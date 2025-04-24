@@ -192,9 +192,9 @@ const Freelancers = () => {
               </div>
             </div>
 
-            <button className="mt-6 w-full py-3 px-4 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02]">
-            <Link to={`/freelancer/${freelancer.id}`}>View Profile</Link>
-            </button>
+            <Link to={`/freelancer/${freelancer.id}`} className="mt-6 w-full py-3 px-4 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02] block text-center">
+              View Profile
+            </Link>
           </div>
         ))}
       </div>
