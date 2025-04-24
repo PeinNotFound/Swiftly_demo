@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { FiStar, FiMapPin, FiDollarSign } from 'react-icons/fi';
+import { FiStar, FiMapPin, FiDollarSign, FiMessageSquare, FiMail } from 'react-icons/fi';
 
 const FreelancerProfile = () => {
   const { id } = useParams();
@@ -11,7 +11,7 @@ const FreelancerProfile = () => {
       id: 1,
       name: 'Sarah Johnson',
       title: 'UI/UX Designer',
-      rating: 4.9,
+    rating: 4.9,
       hourlyRate: 85,
       location: 'San Francisco, CA',
       skills: ['Figma', 'Adobe XD', 'Prototyping', 'User Research'],
@@ -79,43 +79,43 @@ const FreelancerProfile = () => {
       image: 'https://randomuser.me/api/portraits/men/32.jpg',
       about: `I am a full-stack developer with expertise in building scalable web applications. 
       I specialize in modern JavaScript frameworks and cloud technologies, delivering robust solutions for businesses of all sizes.`,
-      experience: [
-        {
+    experience: [
+      {
           title: 'Senior Full Stack Developer',
-          company: 'Tech Solutions Inc.',
+        company: 'Tech Solutions Inc.',
           period: '2021 - Present',
-          description: 'Leading development of enterprise web applications using React and Node.js.',
-        },
-        {
-          title: 'Web Developer',
-          company: 'Digital Innovations',
+        description: 'Leading development of enterprise web applications using React and Node.js.',
+      },
+      {
+        title: 'Web Developer',
+        company: 'Digital Innovations',
           period: '2019 - 2021',
-          description: 'Developed and maintained multiple client websites and web applications.',
-        },
-      ],
-      education: [
-        {
-          degree: 'Bachelor of Science in Computer Science',
+        description: 'Developed and maintained multiple client websites and web applications.',
+      },
+    ],
+    education: [
+      {
+        degree: 'Bachelor of Science in Computer Science',
           school: 'Tech University',
           year: '2019',
-        },
-      ],
-      portfolio: [
-        {
-          title: 'E-commerce Platform',
-          description: 'A full-featured e-commerce platform built with React and Node.js',
-          image: 'https://via.placeholder.com/300x200',
-          link: '#',
-        },
-        {
-          title: 'Task Management App',
-          description: 'A collaborative task management application with real-time updates',
-          image: 'https://via.placeholder.com/300x200',
-          link: '#',
-        },
-      ],
-      reviews: [
-        {
+      },
+    ],
+    portfolio: [
+      {
+        title: 'E-commerce Platform',
+        description: 'A full-featured e-commerce platform built with React and Node.js',
+        image: 'https://via.placeholder.com/300x200',
+        link: '#',
+      },
+      {
+        title: 'Task Management App',
+        description: 'A collaborative task management application with real-time updates',
+        image: 'https://via.placeholder.com/300x200',
+        link: '#',
+      },
+    ],
+    reviews: [
+      {
           client: 'David Wilson',
           rating: 5,
           comment: 'Michael is an exceptional developer. His technical expertise and problem-solving skills are outstanding.',
@@ -300,13 +300,13 @@ const FreelancerProfile = () => {
       reviews: [
         {
           client: 'Thomas Brown',
-          rating: 5,
+        rating: 5,
           comment: 'Lisa is an excellent writer. Her content is engaging and well-researched.',
           date: '2023-12-08',
-        },
-        {
+      },
+      {
           client: 'Emma Davis',
-          rating: 4,
+        rating: 4,
           comment: 'Great work on our blog content. Lisa is professional and delivers quality work.',
           date: '2023-11-15',
         },
@@ -369,9 +369,9 @@ const FreelancerProfile = () => {
           client: 'Rachel Green',
           rating: 5,
           comment: 'Working with James was a pleasure. He delivered exactly what we needed.',
-          date: '2023-11-20',
-        },
-      ],
+        date: '2023-11-20',
+      },
+    ],
     },
   ];
 
@@ -415,16 +415,16 @@ const FreelancerProfile = () => {
                 </span>
               ))}
             </div>
-            {/* <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4">
                 <button className="bg-yellow-400 text-black px-6 py-3 rounded-xl font-medium hover:bg-yellow-500 transition-all duration-200 transform hover:scale-[1.02]">
                   <FiMail className="inline-block mr-2" />
-                  Contact
-                </button>
+                Contact
+              </button>
                 <button className="bg-gray-800 text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-700 transition-all duration-200 transform hover:scale-[1.02]">
                   <FiMessageSquare className="inline-block mr-2" />
                   Message
                 </button>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>

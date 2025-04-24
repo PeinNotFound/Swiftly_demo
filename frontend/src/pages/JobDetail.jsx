@@ -381,7 +381,7 @@ const JobDetail = () => {
               <div>
                   <h3 className="font-medium text-white">{job.company}</h3>
                   <p className="text-gray-400 text-sm">{job.clientLocation}</p>
-                </div>
+              </div>
             </div>
             
             <div className="flex items-center mb-4">
@@ -402,7 +402,7 @@ const JobDetail = () => {
               <div className="flex justify-between">
                   <span className="text-gray-400">Total spent:</span>
                   <span className="text-white">{job.clientSpent}</span>
-                </div>
+              </div>
             </div>
           </div>
           

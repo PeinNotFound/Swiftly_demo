@@ -9,7 +9,81 @@ const Register = () => {
     password: '',
     accountType: '',
   });
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    password: '',
+    accountType: '',
+  });
   const [isLoading, setIsLoading] = useState(false);
+
+  const validateStep = (step) => {
+    const newErrors = { ...errors };
+    let isValid = true;
+
+    if (step === 1) {
+      // Validate name
+      if (!formData.name.trim()) {
+        newErrors.name = 'Name is required';
+        isValid = false;
+      } else if (formData.name.length < 2) {
+        newErrors.name = 'Name must be at least 2 characters';
+        isValid = false;
+      } else {
+        newErrors.name = '';
+      }
+
+      // Validate email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.email.trim()) {
+        newErrors.email = 'Email is required';
+        isValid = false;
+      } else if (!emailRegex.test(formData.email)) {
+        newErrors.email = 'Please enter a valid email address';
+        isValid = false;
+      } else {
+        newErrors.email = '';
+      }
+    }
+
+    if (step === 2) {
+      // Validate password
+      if (!formData.password) {
+        newErrors.password = 'Password is required';
+        isValid = false;
+      } else if (formData.password.length < 8) {
+        newErrors.password = 'Password must be at least 8 characters';
+        isValid = false;
+      } else if (!/[A-Z]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one uppercase letter';
+        isValid = false;
+      } else if (!/[a-z]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one lowercase letter';
+        isValid = false;
+      } else if (!/[0-9]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one number';
+        isValid = false;
+      } else if (!/[!@#$%^&*]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one special character (!@#$%^&*)';
+        isValid = false;
+      } else {
+        newErrors.password = '';
+      }
+    }
+
+    if (step === 3) {
+      // Validate account type
+      if (!formData.accountType) {
+        newErrors.accountType = 'Please select an account type';
+        isValid = false;
+      } else {
+        newErrors.accountType = '';
+      }
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,10 +91,19 @@ const Register = () => {
       ...prevState,
       [name]: value
     }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prevState => ({
+        ...prevState,
+        [name]: ''
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateStep(3)) return;
+    
     setIsLoading(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -28,7 +111,12 @@ const Register = () => {
     // Handle registration logic here
   };
 
-  const nextStep = () => setStep(step + 1);
+  const nextStep = () => {
+    if (validateStep(step)) {
+      setStep(step + 1);
+    }
+  };
+
   const prevStep = () => setStep(step - 1);
 
   return (
@@ -86,9 +174,14 @@ const Register = () => {
                         required
                         value={formData.name}
                         onChange={handleChange}
-                        className="appearance-none block w-full px-3 py-2 border border-gray-700 rounded-lg bg-gray-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
+                        className={`appearance-none block w-full px-3 py-2 border ${
+                          errors.name ? 'border-red-500' : 'border-gray-700'
+                        } rounded-lg bg-gray-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200`}
                         placeholder="John Doe"
                       />
+                      {errors.name && (
+                        <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+                      )}
                     </div>
                   </div>
 
@@ -105,9 +198,14 @@ const Register = () => {
                         required
                         value={formData.email}
                         onChange={handleChange}
-                        className="appearance-none block w-full px-3 py-2 border border-gray-700 rounded-lg bg-gray-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
+                        className={`appearance-none block w-full px-3 py-2 border ${
+                          errors.email ? 'border-red-500' : 'border-gray-700'
+                        } rounded-lg bg-gray-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200`}
                         placeholder="you@example.com"
                       />
+                      {errors.email && (
+                        <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+                      )}
                     </div>
                   </div>
                 </>
@@ -127,12 +225,17 @@ const Register = () => {
                       required
                       value={formData.password}
                       onChange={handleChange}
-                      className="appearance-none block w-full px-3 py-2 border border-gray-700 rounded-lg bg-gray-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
+                      className={`appearance-none block w-full px-3 py-2 border ${
+                        errors.password ? 'border-red-500' : 'border-gray-700'
+                      } rounded-lg bg-gray-800/50 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200`}
                       placeholder="••••••••"
                     />
+                    {errors.password && (
+                      <p className="mt-1 text-sm text-red-500">{errors.password}</p>
+                    )}
                   </div>
                   <p className="mt-2 text-sm text-gray-400">
-                    Must be at least 8 characters long
+                    Must be at least 8 characters long with uppercase, lowercase, number, and special character
                   </p>
                 </div>
               )}
@@ -175,6 +278,9 @@ const Register = () => {
                         </div>
                       </div>
                     ))}
+                    {errors.accountType && (
+                      <p className="mt-1 text-sm text-red-500">{errors.accountType}</p>
+                    )}
                   </div>
                 </div>
               )}
