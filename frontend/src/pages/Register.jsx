@@ -32,8 +32,8 @@ const Register = () => {
   const prevStep = () => setStep(step - 1);
 
   return (
-    <div className="min-h-screen bg-black pt-24 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 relative">
+    <div className="min-h-screen bg-black py-20 sm:py-24 flex items-center justify-center px-4 sm:px-6 overflow-x-hidden">
+      <div className="w-full max-w-[420px] space-y-6 relative mx-auto px-2">
         {/* Background gradient effects */}
         <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-yellow-500/5 to-black rounded-2xl filter blur-xl opacity-50 transform rotate-12"></div>
         
@@ -43,7 +43,7 @@ const Register = () => {
             <p className="text-gray-400">Join our community of talented freelancers</p>
           </div>
 
-          <div className="mt-8 bg-gray-900/50 backdrop-blur-xl py-8 px-4 shadow-2xl rounded-2xl sm:px-10 border border-gray-800">
+          <div className="mt-8 bg-gray-900/50 backdrop-blur-xl py-8 px-6 sm:px-8 shadow-2xl rounded-2xl border border-gray-800">
             {/* Progress indicator */}
             <div className="mb-8">
               <div className="flex justify-between items-center relative">

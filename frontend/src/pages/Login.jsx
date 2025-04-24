@@ -20,30 +20,25 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsLoading(false);
-    // Handle login logic here
   };
 
   return (
-    <div className="min-h-screen bg-black pt-24 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 relative">
-        {/* Background gradient effects */}
+    <div className="min-h-screen bg-black py-20 sm:py-24 flex items-center justify-center px-4 sm:px-6 overflow-x-hidden">
+      <div className="w-full max-w-[420px] space-y-6 relative mx-auto px-2">
         <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-yellow-500/5 to-black rounded-2xl filter blur-xl opacity-50 transform rotate-12"></div>
-        
+
         <div className="relative">
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">Welcome back</h1>
             <p className="text-gray-400">Sign in to your account to continue</p>
           </div>
 
-          <div className="mt-8 bg-gray-900/50 backdrop-blur-xl py-8 px-4 shadow-2xl rounded-2xl sm:px-10 border border-gray-800">
+          <div className="mt-8 bg-gray-900/50 backdrop-blur-xl py-8 px-6 sm:px-8 shadow-2xl rounded-2xl border border-gray-800">
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-300">
-                  Email address
-                </label>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email address</label>
                 <div className="mt-1">
                   <input
                     id="email"
@@ -60,9 +55,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-300">
-                  Password
-                </label>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-300">Password</label>
                 <div className="mt-1">
                   <input
                     id="password"
@@ -156,4 +149,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;

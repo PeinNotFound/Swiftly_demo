@@ -7,7 +7,7 @@ const Navbar = () => {
   const location = useLocation();
 
   // TODO: Replace with actual auth state
-  const isAuthenticated = true;
+  const isAuthenticated = false;
   const user = {
     avatar: 'https://via.placeholder.com/40',
   };
@@ -27,9 +27,9 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-md z-50 border-b border-gray-800">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between h-[64px] px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-8">
+      <div className="max-w-full mx-auto px-4">
+        <div className="flex items-center justify-between h-[64px]">
+          <div className="flex items-center gap-4 md:gap-8">
             <Link 
               to="/" 
               className="text-2xl font-bold bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent hover:opacity-80 transition-opacity active:scale-95"
@@ -124,7 +124,7 @@ const Navbar = () => {
           <div className="flex md:hidden">
             <button
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100/80 transition-all duration-200"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:bg-gray-800/80 transition-all duration-200"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <span className="sr-only">Open main menu</span>
@@ -144,56 +144,96 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden border-t border-gray-100">
+        <div className="md:hidden bg-black/95 backdrop-blur-md border-t border-gray-800">
           <div className="px-2 pt-2 pb-3 space-y-1">
             <Link
               to="/"
-              className="block px-3 py-2 text-[15px] text-gray-700 rounded-md hover:bg-gray-100/80 transition-all duration-200"
+              className={`block px-3 py-2 text-[15px] rounded-md transition-all duration-200 ${
+                isActivePath("/") 
+                  ? "text-yellow-400 bg-gray-800/80" 
+                  : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
             >
               Home
             </Link>
             <Link
               to="/freelancers"
-              className="block px-3 py-2 text-[15px] text-gray-700 rounded-md hover:bg-gray-100/80 transition-all duration-200"
+              className={`block px-3 py-2 text-[15px] rounded-md transition-all duration-200 ${
+                isActivePath("/freelancers") 
+                  ? "text-yellow-400 bg-gray-800/80" 
+                  : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
             >
               Find Freelancers
             </Link>
             <Link
               to="/jobs"
-              className="block px-3 py-2 text-[15px] text-gray-700 rounded-md hover:bg-gray-100/80 transition-all duration-200"
+              className={`block px-3 py-2 text-[15px] rounded-md transition-all duration-200 ${
+                isActivePath("/jobs") 
+                  ? "text-yellow-400 bg-gray-800/80" 
+                  : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
             >
               Find Jobs
             </Link>
             <Link
+              to="/dashboard/freelancer"
+              className={`block px-3 py-2 text-[15px] rounded-md transition-all duration-200 ${
+                isActivePath("/dashboard/freelancer") 
+                  ? "text-yellow-400 bg-gray-800/80" 
+                  : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
+            >
+              Freelancer Dashboard
+            </Link>
+            <Link
+              to="/dashboard/admin"
+              className={`block px-3 py-2 text-[15px] rounded-md transition-all duration-200 ${
+                isActivePath("/dashboard/admin") 
+                  ? "text-yellow-400 bg-gray-800/80" 
+                  : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
+            >
+              Admin Dashboard
+            </Link>
+            <Link
               to="/about"
-              className="block px-3 py-2 text-[15px] text-gray-700 rounded-md hover:bg-gray-100/80 transition-all duration-200"
+              className={`block px-3 py-2 text-[15px] rounded-md transition-all duration-200 ${
+                isActivePath("/about") 
+                  ? "text-yellow-400 bg-gray-800/80" 
+                  : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
             >
               About
             </Link>
             <Link
               to="/contact"
-              className="block px-3 py-2 text-[15px] text-gray-700 rounded-md hover:bg-gray-100/80 transition-all duration-200"
+              className={`block px-3 py-2 text-[15px] rounded-md transition-all duration-200 ${
+                isActivePath("/contact") 
+                  ? "text-yellow-400 bg-gray-800/80" 
+                  : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
             >
               Contact
             </Link>
           </div>
-          <div className="pt-4 pb-3 border-t border-gray-100">
+          <div className="pt-4 pb-3 border-t border-gray-800">
             {isAuthenticated ? (
               <div className="px-2 space-y-1">
                 <Link
                   to="/profile"
-                  className="block px-3 py-2 text-[15px] text-gray-700 rounded-md hover:bg-gray-100/80 transition-all duration-200"
+                  className="block px-3 py-2 text-[15px] text-gray-300 rounded-md hover:bg-gray-800/80 hover:text-yellow-400 transition-all duration-200"
                 >
                   Your Profile
                 </Link>
                 <Link
                   to="/settings"
-                  className="block px-3 py-2 text-[15px] text-gray-700 rounded-md hover:bg-gray-100/80 transition-all duration-200"
+                  className="block px-3 py-2 text-[15px] text-gray-300 rounded-md hover:bg-gray-800/80 hover:text-yellow-400 transition-all duration-200"
                 >
                   Settings
                 </Link>
                 <button
-                  className="block w-full text-left px-3 py-2 text-[15px] text-gray-700 rounded-md hover:bg-gray-100/80 transition-all duration-200"
+                  className="block w-full text-left px-3 py-2 text-[15px] text-gray-300 rounded-md hover:bg-gray-800/80 hover:text-yellow-400 transition-all duration-200"
                   onClick={() => {
                     // TODO: Implement logout
                     console.log('Logout clicked');
@@ -206,13 +246,13 @@ const Navbar = () => {
               <div className="px-2 space-y-2">
                 <Link
                   to="/login"
-                  className="block px-3 py-2 text-[15px] text-gray-700 rounded-md hover:bg-gray-100/80 transition-all duration-200"
+                  className="block w-full px-3 py-2 text-[15px] text-gray-300 rounded-md hover:bg-gray-800/80 hover:text-yellow-400 transition-all duration-200 text-center"
                 >
                   Sign in
                 </Link>
                 <Link
                   to="/register"
-                  className="block px-3 py-2 text-[15px] text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all duration-200"
+                  className="block w-full px-3 py-2 text-[15px] text-black bg-yellow-400 rounded-lg hover:bg-yellow-500 transition-all duration-200 font-medium text-center"
                 >
                   Sign up
                 </Link>

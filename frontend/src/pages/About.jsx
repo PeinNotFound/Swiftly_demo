@@ -1,5 +1,6 @@
 import React from 'react';
 import { FiTarget, FiUsers, FiAward, FiTrendingUp } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const About = () => {
   const stats = [
@@ -30,24 +31,24 @@ const About = () => {
 
   const team = [
     {
-      name: 'Sarah Johnson',
+      name: 'Ahmed Hmimida',
       role: 'CEO & Co-founder',
-      image: 'https://randomuser.me/api/portraits/women/1.jpg',
+      image: 'https://ui-avatars.com/api/?name=AH&background=fbbf24&color=000&size=128&bold=true',
     },
     {
-      name: 'Michael Chen',
+      name: 'Zakarya Ziate',
       role: 'CTO & Co-founder',
-      image: 'https://randomuser.me/api/portraits/men/1.jpg',
+      image: 'https://ui-avatars.com/api/?name=ZZ&background=fbbf24&color=000&size=128&bold=true',
     },
     {
-      name: 'Emily Rodriguez',
+      name: 'Saad Outlite',
       role: 'Head of Operations',
-      image: 'https://randomuser.me/api/portraits/women/2.jpg',
+      image: 'https://ui-avatars.com/api/?name=SO&background=fbbf24&color=000&size=128&bold=true',
     },
     {
-      name: 'David Kim',
+      name: 'Hamza Khabidi',
       role: 'Head of Product',
-      image: 'https://randomuser.me/api/portraits/men/2.jpg',
+      image: 'https://ui-avatars.com/api/?name=HK&background=fbbf24&color=000&size=128&bold=true',
     },
   ];
 
@@ -129,7 +130,7 @@ const About = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="max-w-7xl mx-auto mb-20">
+      <div className="max-w-7xl mx-auto pb-[70px]">
         <div className="bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 rounded-2xl p-12 text-center relative overflow-hidden">
           <div className="relative z-10">
             <h2 className="text-3xl font-bold text-white mb-6">
@@ -139,12 +140,18 @@ const About = () => {
               Whether you're a freelancer looking for exciting projects or a business seeking top talent, Swiftly is here to help you succeed.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02]">
+              <Link
+                to="/register"
+                className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02]"
+              >
                 Join as Freelancer
-              </button>
-              <button className="px-8 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl font-medium transition-all duration-200">
-                Hire Talent
-              </button>
+              </Link>
+              <Link
+                to="/freelancers"
+                className="px-8 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl font-medium transition-all duration-200"
+              >
+                Find Talent
+              </Link>
             </div>
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/5 to-yellow-600/5 transform rotate-12"></div>

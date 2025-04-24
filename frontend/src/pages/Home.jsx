@@ -96,16 +96,16 @@ const Home = () => {
           Your browser does not support the video tag.
         </video>
         <div className="relative z-10 w-full h-full">
-          <div className="flex flex-col sm:flex-row gap-4 absolute bottom-12 right-12">
+          <div className="flex flex-col sm:flex-row gap-4 absolute bottom-8 sm:bottom-12 right-4 sm:right-12 left-4 sm:left-auto">
             <Link
               to="/freelancers"
-              className="bg-yellow-400 text-black px-8 py-4 rounded-lg font-semibold hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="w-full sm:w-auto text-center bg-yellow-400 text-black px-6 sm:px-8 py-4 rounded-lg font-semibold hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               Find Freelancers
             </Link>
             <Link
               to="/jobs"
-              className="bg-black/30 backdrop-blur-sm border-2 border-yellow-400 text-yellow-400 px-8 py-4 rounded-lg font-semibold hover:bg-black/50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="w-full sm:w-auto text-center bg-black/30 backdrop-blur-sm border-2 border-yellow-400 text-yellow-400 px-6 sm:px-8 py-4 rounded-lg font-semibold hover:bg-black/50 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               Find Jobs
             </Link>
@@ -335,10 +335,10 @@ const Home = () => {
           {/* Call to Action */}
           <div className="text-center mt-16">
             <Link
-              to="/jobs/create"
+              to="/jobs"
               className="inline-flex items-center px-8 py-4 bg-yellow-400 text-black rounded-lg font-semibold hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
-              Post a Project Now
+              Find Jobs
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
