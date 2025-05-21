@@ -1,9 +1,11 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { FiStar, FiMapPin, FiDollarSign, FiMessageSquare, FiMail } from 'react-icons/fi';
 
 const FreelancerProfile = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [showChat, setShowChat] = useState(false);
 
   // Mock data for demonstration - this would typically come from an API
   const freelancers = [
@@ -420,7 +422,10 @@ const FreelancerProfile = () => {
                   <FiMail className="inline-block mr-2" />
                 Contact
               </button>
-                <button className="bg-gray-800 text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-700 transition-all duration-200 transform hover:scale-[1.02]">
+                <button 
+                  className="bg-gray-800 text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-700 transition-all duration-200 transform hover:scale-[1.02]"
+                  onClick={() => navigate(`/chat/${freelancer.id}`)}
+                >
                   <FiMessageSquare className="inline-block mr-2" />
                   Message
                 </button>
@@ -428,6 +433,15 @@ const FreelancerProfile = () => {
           </div>
         </div>
       </div>
+
+      {showChat && (
+        <div className="max-w-7xl mx-auto mb-8">
+          <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800">
+            <h2 className="text-2xl font-bold text-white mb-4">Chat with {freelancer.name}</h2>
+            <p className="text-gray-400">Chat component will be displayed here.</p>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}

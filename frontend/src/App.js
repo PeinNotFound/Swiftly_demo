@@ -15,6 +15,8 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import JobDetail from './pages/JobDetail';
 import Jobs from './pages/Jobs';
+import ChatPage from './pages/ChatPage';
+import ChatsPage from './pages/ChatsPage';
 
 // Dashboard components
 import FreelancerDashboard from './components/dashboard/FreelancerDashboard';
@@ -45,6 +47,8 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/chat/:freelancerId" element={<ChatPage />} />
+            <Route path="/chats" element={<ChatsPage />} />
             
             {/* Authentication Routes */}
             <Route path="/login" element={<Login />} />

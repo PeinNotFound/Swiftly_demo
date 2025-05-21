@@ -58,7 +58,9 @@ const Navbar = () => {
               <Link to="/contact" className={navLinkClasses("/contact")}>
                 Contact
               </Link>
-              
+              <Link to="/chats" className={navLinkClasses("/chats")}>
+                Chats
+              </Link>
             </div>
           </div>
 
@@ -215,6 +217,16 @@ const Navbar = () => {
               }`}
             >
               Contact
+            </Link>
+            <Link
+              to="/chats"
+              className={`block px-3 py-2 text-[15px] rounded-md transition-all duration-200 ${
+                isActivePath("/chats") 
+                  ? "text-yellow-400 bg-gray-800/80" 
+                  : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
+            >
+              Chats
             </Link>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-800">
