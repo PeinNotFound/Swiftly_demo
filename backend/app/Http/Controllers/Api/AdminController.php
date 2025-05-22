@@ -35,7 +35,6 @@ class AdminController extends Controller
     public function getFreelancers()
     {
         $freelancers = User::where('role', 'freelancer')
-            // ->with(['skills', 'portfolio'])
             ->get()
             ->map(function ($freelancer) {
                 return [
@@ -43,11 +42,19 @@ class AdminController extends Controller
                     'name' => $freelancer->name,
                     'email' => $freelancer->email,
                     'hourly_rate' => $freelancer->hourly_rate,
-                    // 'skills' => $freelancer->skills, // Remove or keep if you have a skills attribute/column
-                    // 'completed_projects' => $freelancer->completed_projects_count,
-                    // 'rating' => $freelancer->average_rating,
+                    'title' => $freelancer->title,
+                    'bio' => $freelancer->bio,
+                    'location' => $freelancer->location,
+                    'experience_years' => $freelancer->experience_years,
+                    'education' => $freelancer->education,
+                    'languages' => $freelancer->languages,
+                    'availability' => $freelancer->availability,
+                    'completed_projects' => $freelancer->completed_projects_count ?? 0,
+                    'rating' => $freelancer->average_rating ?? 0,
                     'created_at' => $freelancer->created_at,
                     'profile_picture' => $freelancer->profile_picture_url,
+                    'skills' => $freelancer->skills ?? [],
+                    'portfolio' => $freelancer->portfolio ?? [],
                 ];
             });
 
