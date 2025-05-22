@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FiSend } from 'react-icons/fi';
+import authService from '../../services/authService';
 
 const Chat = ({ userId, freelancerId }) => {
   const [messages, setMessages] = useState([]);
@@ -9,56 +10,35 @@ const Chat = ({ userId, freelancerId }) => {
 
   // Fetch messages when component mounts
   useEffect(() => {
-    if (userId && freelancerId) {
-      console.log('Fetching messages for:', { userId, freelancerId });
-      fetchMessages();
-    }
-  }, [userId, freelancerId]);
+    const fetchMessages = async () => {
+      try {
+        const response = await authService.api.get(`/messages/${userId}/${freelancerId}`);
+        const data = response.data;
+        setMessages(data.messages);
+      } catch (error) {
+        setError('Failed to fetch messages');
+      }
+    };
 
-  const fetchMessages = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/messages/${userId}/${freelancerId}`);
-      const data = await response.json();
-      console.log('Received messages:', data);
-      setMessages(data);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      setError('Failed to load messages. Please try again.');
-    }
-  };
+    fetchMessages();
+  }, [userId, freelancerId]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
-    setIsLoading(true);
-    setError(null);
     try {
-      const response = await fetch('http://localhost:5000/api/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId,
-          freelancerId,
-          content: newMessage,
-        }),
+      const response = await authService.api.post('/messages', {
+        sender_id: userId,
+        receiver_id: freelancerId,
+        message: newMessage
       });
 
-      if (response.ok) {
-        const sentMessage = await response.json();
-        console.log('Message sent successfully:', sentMessage);
-        setMessages([...messages, sentMessage]);
-        setNewMessage('');
-      } else {
-        throw new Error('Failed to send message');
-      }
+      const sentMessage = response.data.message;
+      setMessages(prev => [...prev, sentMessage]);
+      setNewMessage('');
     } catch (error) {
-      console.error('Error sending message:', error);
-      setError('Failed to send message. Please try again.');
-    } finally {
-      setIsLoading(false);
+      setError('Failed to send message');
     }
   };
 

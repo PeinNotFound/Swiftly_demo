@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   // TODO: Replace with actual auth state
   const isAuthenticated = false;
@@ -24,6 +25,12 @@ const Navbar = () => {
     after:bg-yellow-400 after:transform after:scale-x-0 after:origin-left after:transition-transform
     ${isActivePath(path) ? 'after:scale-x-100' : 'hover:after:scale-x-100'}
     active:scale-95 active:bg-gray-700/80`;
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    setIsProfileOpen(false);
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-md z-50 border-b border-gray-800">
@@ -95,10 +102,7 @@ const Navbar = () => {
                     <div className="h-[1px] bg-gray-800 my-1"></div>
                     <button
                       className="block w-full text-left px-4 py-2 text-[15px] text-gray-300 hover:bg-gray-800 hover:text-yellow-400 transition-colors active:scale-95"
-                      onClick={() => {
-                        // TODO: Implement logout
-                        console.log('Logout clicked');
-                      }}
+                      onClick={handleLogout}
                     >
                       Sign out
                     </button>
@@ -246,10 +250,7 @@ const Navbar = () => {
                 </Link>
                 <button
                   className="block w-full text-left px-3 py-2 text-[15px] text-gray-300 rounded-md hover:bg-gray-800/80 hover:text-yellow-400 transition-all duration-200"
-                  onClick={() => {
-                    // TODO: Implement logout
-                    console.log('Logout clicked');
-                  }}
+                  onClick={handleLogout}
                 >
                   Sign out
                 </button>

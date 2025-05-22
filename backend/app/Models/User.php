@@ -2,36 +2,37 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
-        'phone',
         'bio',
+        'skills',
+        'hourly_rate',
+        'availability',
         'profile_picture',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -39,40 +40,74 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'hourly_rate' => 'float',
+    ];
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        parent::boot();
+
+        static::updating(function ($user) {
+            Log::info('User being updated:', [
+                'user_id' => $user->id,
+                'changes' => $user->getDirty(),
+                'original' => $user->getOriginal()
+            ]);
+        });
+
+        static::updated(function ($user) {
+            Log::info('User updated:', [
+                'user_id' => $user->id,
+                'changes' => $user->getChanges(),
+                'original' => $user->getOriginal()
+            ]);
+        });
     }
 
-    public function freelancer()
-    {
-        return $this->hasOne(Freelancer::class);
-    }
-
-    public function jobs()
-    {
-        return $this->hasMany(Job::class);
-    }
-
-    public function isAdmin()
+    /**
+     * Check if user is an admin
+     */
+    public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-    public function isFreelancer()
+    /**
+     * Check if user is a freelancer
+     */
+    public function isFreelancer(): bool
     {
         return $this->role === 'freelancer';
     }
 
-    public function isClient()
+    /**
+     * Check if user is a client
+     */
+    public function isClient(): bool
     {
         return $this->role === 'client';
+    }
+
+    /**
+     * Get the profile picture URL.
+     *
+     * @return string
+     */
+    public function getProfilePictureUrlAttribute()
+    {
+        if ($this->profile_picture) {
+            return asset('storage/profile_pictures/' . $this->profile_picture);
+        }
+        return null;
     }
 }

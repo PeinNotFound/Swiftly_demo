@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import NumberTicker from '../components/animation/NumberTicker';
 
 const Home = () => {
 
@@ -62,9 +63,9 @@ const Home = () => {
   ];
 
   const stats = [
-    { id: 1, number: '10K+', label: 'Active Freelancers' },
-    { id: 2, number: '5K+', label: 'Completed Projects' },
-    { id: 3, number: '98%', label: 'Client Satisfaction' },
+    { id: 1, number: 10000, suffix: 'K+', label: 'Active Freelancers' },
+    { id: 2, number: 5000, suffix: 'K+', label: 'Completed Projects' },
+    { id: 3, number: 98, suffix: '%', label: 'Client Satisfaction' },
     { id: 4, number: '24/7', label: 'Support Available' },
   ];
 
@@ -148,7 +149,13 @@ const Home = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
             {stats.map((stat) => (
               <div key={stat.id} className="text-center">
-                <div className="text-4xl font-bold text-yellow-400 mb-2">{stat.number}</div>
+                <div className="text-4xl font-bold text-yellow-400 mb-2">
+                  {stat.id === 4 ? (
+                    stat.number
+                  ) : (
+                    <NumberTicker number={stat.number} suffix={stat.suffix} />
+                  )}
+                </div>
                 <div className="text-gray-400">{stat.label}</div>
               </div>
             ))}

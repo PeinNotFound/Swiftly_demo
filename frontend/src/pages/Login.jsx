@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -20,8 +24,23 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsLoading(false);
+    setError('');
+
+    try {
+      const response = await login(formData);
+      
+      if (response.success) {
+        // Get the return URL from location state or default to role-based dashboard
+        const from = location.state?.from?.pathname || `/dashboard/${response.data.user.role}`;
+        navigate(from, { replace: true });
+      } else {
+        setError(response.message || 'Login failed');
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'An error occurred during login');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -36,6 +55,12 @@ const Login = () => {
           </div>
 
           <div className="mt-8 bg-gray-900/50 backdrop-blur-xl py-8 px-6 sm:px-8 shadow-2xl rounded-2xl border border-gray-800">
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm">
+                {error}
+              </div>
+            )}
+
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-300">Email address</label>
