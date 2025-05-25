@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { FaCheck, FaTimes, FaSearch, FaFilter, FaUserCheck, FaUserTimes, FaUserClock } from 'react-icons/fa';
 import { adminService } from '../../services/adminService';
 import { toast } from 'react-toastify';
-import { FaCheck, FaTimes, FaSpinner } from 'react-icons/fa';
 
 const FreelancerManagement = () => {
     const [freelancers, setFreelancers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('pending');
+
+    useEffect(() => {
+        fetchFreelancers();
+    }, []);
 
     const fetchFreelancers = async () => {
         try {
@@ -23,66 +28,113 @@ const FreelancerManagement = () => {
         }
     };
 
-    useEffect(() => {
-        fetchFreelancers();
-    }, []);
-
-    const handleVerify = async (id) => {
+    const handleApprove = async (freelancerId) => {
         try {
-            await adminService.verifyFreelancer(id);
+            await adminService.approveFreelancer(freelancerId);
+            setFreelancers(freelancers.map(freelancer => 
+                freelancer.id === freelancerId ? { ...freelancer, is_approved: true, is_verified: true } : freelancer
+            ));
+            toast.success('Freelancer approved successfully');
+        } catch (err) {
+            toast.error('Failed to approve freelancer');
+        }
+    };
+
+    const handleReject = async (freelancerId) => {
+        if (window.confirm('Are you sure you want to reject this freelancer?')) {
+            try {
+                await adminService.rejectFreelancer(freelancerId);
+                setFreelancers(freelancers.filter(freelancer => freelancer.id !== freelancerId));
+                toast.success('Freelancer rejected successfully');
+            } catch (err) {
+                toast.error('Failed to reject freelancer');
+            }
+        }
+    };
+
+    const handleVerify = async (freelancerId) => {
+        try {
+            await adminService.verifyFreelancer(freelancerId);
+            setFreelancers(freelancers.map(freelancer => 
+                freelancer.id === freelancerId ? { ...freelancer, is_verified: true } : freelancer
+            ));
             toast.success('Freelancer verified successfully');
-            fetchFreelancers();
         } catch (err) {
             toast.error('Failed to verify freelancer');
         }
     };
 
-    const handleSuspend = async (id) => {
+    const handleSuspend = async (freelancerId) => {
         try {
-            await adminService.suspendFreelancer(id);
+            await adminService.suspendFreelancer(freelancerId);
+            setFreelancers(freelancers.map(freelancer => 
+                freelancer.id === freelancerId ? { ...freelancer, is_suspended: true } : freelancer
+            ));
             toast.success('Freelancer suspended successfully');
-            fetchFreelancers();
         } catch (err) {
             toast.error('Failed to suspend freelancer');
         }
     };
 
-    const filteredFreelancers = freelancers.filter(freelancer =>
-        freelancer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        freelancer.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredFreelancers = freelancers.filter(freelancer => {
+        const matchesSearch = freelancer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            freelancer.email.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStatus = statusFilter === 'all' || 
+                            (statusFilter === 'pending' && !freelancer.is_approved) ||
+                            (statusFilter === 'verified' && freelancer.is_verified && !freelancer.is_suspended) ||
+                            (statusFilter === 'suspended' && freelancer.is_suspended);
+        return matchesSearch && matchesStatus;
+    });
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
-                <FaSpinner className="animate-spin text-4xl text-yellow-400" />
+            <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto"></div>
+                <p className="mt-4 text-gray-600">Loading freelancers...</p>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="text-red-500 text-center p-4">
-                {error}
+            <div className="text-center py-12">
+                <p className="text-red-500">{error}</p>
             </div>
         );
     }
 
     return (
-        <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Freelancer Management</h2>
-                <div className="relative">
-                    <input
-                        type="text"
-                        placeholder="Search freelancers..."
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+        <div className="bg-white rounded-lg shadow">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-xl font-semibold text-gray-900">Freelancer Management</h2>
+                    <div className="flex items-center gap-4">
+                        <div className="relative">
+                            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Search freelancers..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                            />
+                        </div>
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                        >
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending Approval</option>
+                            <option value="verified">Verified</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
+            {/* Freelancers Table */}
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
@@ -91,13 +143,13 @@ const FreelancerManagement = () => {
                                 Freelancer
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Skills
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Rating
+                                Status
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Join Date
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Actions
@@ -105,54 +157,30 @@ const FreelancerManagement = () => {
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {filteredFreelancers.map((freelancer) => (
+                        {filteredFreelancers.map(freelancer => (
                             <tr key={freelancer.id}>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
-                                        <div className="flex-shrink-0 h-10 w-10">
-                                            {freelancer.profile_picture ? (
-                                                <img
-                                                    className="h-10 w-10 rounded-full"
-                                                    src={freelancer.profile_picture}
-                                                    alt={freelancer.name}
-                                                />
-                                            ) : (
-                                                <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                                    <span className="text-gray-500 font-medium">
-                                                        {freelancer.name.charAt(0)}
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="ml-4">
-                                            <div className="text-sm font-medium text-gray-900">
-                                                {freelancer.name}
+                                        {freelancer.profile_picture ? (
+                                            <img
+                                                src={freelancer.profile_picture}
+                                                alt={freelancer.name}
+                                                className="h-10 w-10 rounded-full mr-3"
+                                            />
+                                        ) : (
+                                            <div className="h-10 w-10 rounded-full mr-3 bg-yellow-400 flex items-center justify-center text-black font-semibold">
+                                                {freelancer.name.charAt(0).toUpperCase()}
                                             </div>
-                                            <div className="text-sm text-gray-500">
-                                                {freelancer.email}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center space-x-2">
-                                        <span className={`px-2 py-1 text-xs rounded-full ${
-                                            freelancer.is_active
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800'
-                                        }`}>
-                                            {freelancer.is_active ? 'Active' : 'Suspended'}
-                                        </span>
-                                        {freelancer.is_verified && (
-                                            <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
-                                                Verified
-                                            </span>
                                         )}
+                                        <div>
+                                            <div className="text-sm font-medium text-gray-900">{freelancer.name}</div>
+                                            <div className="text-sm text-gray-500">{freelancer.email}</div>
+                                        </div>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="flex flex-wrap gap-1">
-                                        {freelancer.skills?.map((skill, index) => (
+                                        {freelancer.skills?.slice(0, 3).map((skill, index) => (
                                             <span
                                                 key={index}
                                                 className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full"
@@ -160,40 +188,66 @@ const FreelancerManagement = () => {
                                                 {skill}
                                             </span>
                                         ))}
+                                        {freelancer.skills?.length > 3 && (
+                                            <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">
+                                                +{freelancer.skills.length - 3} more
+                                            </span>
+                                        )}
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center">
-                                        <span className="text-sm text-gray-900">
-                                            {freelancer.rating?.toFixed(1) || 'N/A'}
-                                        </span>
-                                        <span className="text-sm text-gray-500 ml-1">
-                                            ({freelancer.completed_projects || 0} projects)
-                                        </span>
-                                    </div>
+                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                        freelancer.is_suspended ? 'bg-red-100 text-red-800' :
+                                        !freelancer.is_approved ? 'bg-yellow-100 text-yellow-800' :
+                                        freelancer.is_verified ? 'bg-green-100 text-green-800' :
+                                        'bg-gray-100 text-gray-800'
+                                    }`}>
+                                        {freelancer.is_suspended ? 'Suspended' :
+                                         !freelancer.is_approved ? 'Pending Approval' :
+                                         freelancer.is_verified ? 'Verified' : 'Unverified'}
+                                    </span>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div className="flex items-center space-x-2">
-                                        {!freelancer.is_verified && (
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {new Date(freelancer.created_at).toLocaleDateString()}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div className="flex items-center gap-2">
+                                        {!freelancer.is_approved && (
+                                            <>
+                                                <button
+                                                    onClick={() => handleApprove(freelancer.id)}
+                                                    className="text-green-600 hover:text-green-900"
+                                                    title="Approve freelancer"
+                                                >
+                                                    <FaCheck />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleReject(freelancer.id)}
+                                                    className="text-red-600 hover:text-red-900"
+                                                    title="Reject freelancer"
+                                                >
+                                                    <FaTimes />
+                                                </button>
+                                            </>
+                                        )}
+                                        {freelancer.is_approved && !freelancer.is_verified && !freelancer.is_suspended && (
                                             <button
                                                 onClick={() => handleVerify(freelancer.id)}
                                                 className="text-green-600 hover:text-green-900"
-                                                title="Verify Freelancer"
+                                                title="Verify freelancer"
                                             >
-                                                <FaCheck className="w-5 h-5" />
+                                                <FaUserCheck />
                                             </button>
                                         )}
-                                        <button
-                                            onClick={() => handleSuspend(freelancer.id)}
-                                            className={`${
-                                                freelancer.is_active
-                                                    ? 'text-red-600 hover:text-red-900'
-                                                    : 'text-green-600 hover:text-green-900'
-                                            }`}
-                                            title={freelancer.is_active ? 'Suspend Freelancer' : 'Activate Freelancer'}
-                                        >
-                                            <FaTimes className="w-5 h-5" />
-                                        </button>
+                                        {freelancer.is_approved && !freelancer.is_suspended && (
+                                            <button
+                                                onClick={() => handleSuspend(freelancer.id)}
+                                                className="text-red-600 hover:text-red-900"
+                                                title="Suspend freelancer"
+                                            >
+                                                <FaUserTimes />
+                                            </button>
+                                        )}
                                     </div>
                                 </td>
                             </tr>

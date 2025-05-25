@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\JobController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Api\FreelancerController;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -51,4 +52,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:client')->group(function () {
         // Add client specific routes here
     });
+});
+
+// Freelancer Management Routes (Admin only)
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/freelancers', [FreelancerController::class, 'index']);
+    Route::post('/freelancers/{id}/approve', [FreelancerController::class, 'approve']);
+    Route::post('/freelancers/{id}/reject', [FreelancerController::class, 'reject']);
+    Route::post('/freelancers/{id}/verify', [FreelancerController::class, 'verify']);
+    Route::post('/freelancers/{id}/suspend', [FreelancerController::class, 'suspend']);
 });
