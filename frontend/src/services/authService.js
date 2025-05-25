@@ -85,7 +85,7 @@ const authService = {
             // Laravel needs method override for PUT with FormData
             formData.append('_method', 'PUT');
 
-            const response = await api.post('/profile', formData, {
+            const response = await api.post('/freelancers/profile', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 }

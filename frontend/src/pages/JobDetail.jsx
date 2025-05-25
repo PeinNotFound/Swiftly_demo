@@ -1,309 +1,36 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { FiMapPin, FiUser, FiCalendar } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { FiMapPin, FiUser, FiCalendar, FiMessageSquare } from 'react-icons/fi';
+import { useAuth } from '../contexts/AuthContext';
+import { jobService } from '../services/jobService';
+import MessageBox from '../components/MessageBox';
 
 const JobDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [proposalText, setProposalText] = useState('');
   const [bidAmount, setBidAmount] = useState('');
   const [deliveryTime, setDeliveryTime] = useState('7');
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
 
-  // Mock data for demonstration - this would typically come from an API
-  const jobs = [
-    {
-      id: 1,
-      title: 'Senior Full Stack Developer',
-      company: 'TechCorp Inc.',
-      location: 'Remote',
-      type: 'Full-time',
-      salary: '$80k - $120k',
-      posted: '2 days ago',
-      description: 'We are looking for an experienced Full Stack Developer to join our growing team. You will be responsible for developing and maintaining web applications using React and Node.js.',
-      skills: ['React', 'Node.js', 'PostgreSQL', 'AWS'],
-      logo: 'https://ui-avatars.com/api/?name=TC&background=000&color=fff',
-    clientRating: 4.8,
-    clientReviews: 24,
-    clientLocation: 'New York, USA',
-    clientMemberSince: '2021-03-10',
-    clientCompletedJobs: 15,
-    clientSpent: '$12,500',
-    jobType: 'Fixed Price',
-    experienceLevel: 'Intermediate',
-    projectSize: 'Medium',
-    estimatedDuration: '1-3 months',
-    additionalDetails: `
-      <h3>Project Requirements:</h3>
-      <ul>
-        <li>Responsive design that works on all devices</li>
-        <li>Product catalog with filtering and search functionality</li>
-        <li>Shopping cart with secure checkout process</li>
-        <li>Integration with payment gateways (Stripe, PayPal)</li>
-        <li>Admin dashboard for managing products and orders</li>
-        <li>User accounts with order history</li>
-      </ul>
-      
-      <h3>Technical Requirements:</h3>
-      <ul>
-        <li>Frontend: React.js with responsive design</li>
-        <li>Backend: Node.js with Express</li>
-          <li>Database: PostgreSQL</li>
-        <li>Authentication: JWT</li>
-        <li>Payment Processing: Stripe API</li>
-      </ul>
-      
-      <h3>Deliverables:</h3>
-      <ul>
-        <li>Complete source code</li>
-        <li>Database schema</li>
-        <li>API documentation</li>
-        <li>Deployment instructions</li>
-        <li>3 months of technical support</li>
-      </ul>
-    `,
-    },
-    {
-      id: 2,
-      title: 'UI/UX Designer',
-      company: 'Creative Studios',
-      location: 'San Francisco, CA',
-      type: 'Full-time',
-      salary: '$70k - $100k',
-      posted: '3 days ago',
-      description: 'Join our design team to create beautiful and intuitive user interfaces for our clients. Strong background in user-centered design principles required.',
-      skills: ['Figma', 'Adobe XD', 'User Research', 'Prototyping'],
-      logo: 'https://ui-avatars.com/api/?name=CS&background=000&color=fff',
-      clientRating: 4.9,
-      clientReviews: 18,
-      clientLocation: 'San Francisco, CA',
-      clientMemberSince: '2020-06-15',
-      clientCompletedJobs: 12,
-      clientSpent: '$8,500',
-      jobType: 'Fixed Price',
-      experienceLevel: 'Intermediate',
-      projectSize: 'Medium',
-      estimatedDuration: '2-4 months',
-      additionalDetails: `
-        <h3>Project Requirements:</h3>
-        <ul>
-          <li>Create user-centered designs by understanding business requirements</li>
-          <li>Develop wireframes and prototypes</li>
-          <li>Create user flows and journey maps</li>
-          <li>Conduct user research and usability testing</li>
-          <li>Collaborate with developers to implement designs</li>
-        </ul>
-        
-        <h3>Technical Requirements:</h3>
-        <ul>
-          <li>Proficiency in Figma and Adobe XD</li>
-          <li>Experience with user research methodologies</li>
-          <li>Knowledge of design systems and component libraries</li>
-          <li>Understanding of accessibility standards</li>
-        </ul>
-        
-        <h3>Deliverables:</h3>
-        <ul>
-          <li>Wireframes and prototypes</li>
-          <li>User research reports</li>
-          <li>Design system documentation</li>
-          <li>Final design assets</li>
-        </ul>
-      `,
-    },
-    {
-      id: 3,
-      title: 'Digital Marketing Manager',
-      company: 'Growth Marketing',
-      location: 'New York, NY',
-      type: 'Contract',
-      salary: '$60/hr',
-      posted: '1 week ago',
-      description: 'Lead our digital marketing initiatives across multiple channels. Experience with SEO, content marketing, and social media management required.',
-      skills: ['SEO', 'Content Strategy', 'Social Media', 'Google Analytics'],
-      logo: 'https://ui-avatars.com/api/?name=GM&background=000&color=fff',
-      clientRating: 4.7,
-      clientReviews: 15,
-      clientLocation: 'New York, NY',
-      clientMemberSince: '2021-01-20',
-      clientCompletedJobs: 10,
-      clientSpent: '$6,000',
-      jobType: 'Hourly',
-      experienceLevel: 'Expert',
-      projectSize: 'Large',
-      estimatedDuration: '6+ months',
-      additionalDetails: `
-        <h3>Project Requirements:</h3>
-        <ul>
-          <li>Develop and execute digital marketing strategies</li>
-          <li>Manage social media accounts and content creation</li>
-          <li>Optimize website for search engines</li>
-          <li>Analyze and report on marketing performance</li>
-          <li>Manage paid advertising campaigns</li>
-        </ul>
-        
-        <h3>Technical Requirements:</h3>
-        <ul>
-          <li>Experience with Google Analytics and SEO tools</li>
-          <li>Knowledge of social media platforms and management tools</li>
-          <li>Understanding of content marketing principles</li>
-          <li>Experience with paid advertising platforms</li>
-        </ul>
-        
-        <h3>Deliverables:</h3>
-        <ul>
-          <li>Digital marketing strategy document</li>
-          <li>Monthly performance reports</li>
-          <li>Content calendar and assets</li>
-          <li>SEO optimization recommendations</li>
-        </ul>
-      `,
-    },
-    {
-      id: 4,
-      title: 'Mobile App Developer',
-      company: 'AppWorks',
-      location: 'Remote',
-      type: 'Part-time',
-      salary: '$50/hr',
-      posted: '5 days ago',
-      description: 'Develop cross-platform mobile applications using React Native. Experience with iOS and Android development is a plus.',
-      skills: ['React Native', 'iOS', 'Android', 'Firebase'],
-      logo: 'https://ui-avatars.com/api/?name=AW&background=000&color=fff',
-      clientRating: 4.8,
-      clientReviews: 20,
-      clientLocation: 'Remote',
-      clientMemberSince: '2020-09-05',
-      clientCompletedJobs: 8,
-      clientSpent: '$5,000',
-      jobType: 'Hourly',
-      experienceLevel: 'Intermediate',
-      projectSize: 'Medium',
-      estimatedDuration: '3-6 months',
-      additionalDetails: `
-        <h3>Project Requirements:</h3>
-        <ul>
-          <li>Develop cross-platform mobile applications</li>
-          <li>Implement user interface and functionality</li>
-          <li>Integrate with backend services</li>
-          <li>Ensure app performance and quality</li>
-          <li>Collaborate with design and backend teams</li>
-        </ul>
-        
-        <h3>Technical Requirements:</h3>
-        <ul>
-          <li>Experience with React Native</li>
-          <li>Knowledge of iOS and Android development</li>
-          <li>Understanding of mobile app architecture</li>
-          <li>Experience with Firebase or similar backend services</li>
-        </ul>
-        
-        <h3>Deliverables:</h3>
-        <ul>
-          <li>Cross-platform mobile application</li>
-          <li>Source code and documentation</li>
-          <li>App store submission packages</li>
-          <li>Testing and deployment instructions</li>
-        </ul>
-      `,
-    },
-    {
-      id: 5,
-      title: 'Content Writer',
-      company: 'ContentFirst',
-      location: 'Remote',
-      type: 'Freelance',
-      salary: '$40/hr',
-      posted: '1 day ago',
-      description: 'Create engaging content for technology and business blogs. Strong understanding of SEO and content marketing principles required.',
-      skills: ['Content Writing', 'SEO', 'Copywriting', 'Research'],
-      logo: 'https://ui-avatars.com/api/?name=CF&background=000&color=fff',
-      clientRating: 4.9,
-      clientReviews: 30,
-      clientLocation: 'Remote',
-      clientMemberSince: '2021-02-15',
-      clientCompletedJobs: 25,
-      clientSpent: '$15,000',
-      jobType: 'Hourly',
-      experienceLevel: 'Intermediate',
-      projectSize: 'Small',
-      estimatedDuration: '1-3 months',
-      additionalDetails: `
-        <h3>Project Requirements:</h3>
-        <ul>
-          <li>Write engaging blog posts and articles</li>
-          <li>Research industry topics and trends</li>
-          <li>Optimize content for search engines</li>
-          <li>Edit and proofread content</li>
-          <li>Meet deadlines and content goals</li>
-        </ul>
-        
-        <h3>Technical Requirements:</h3>
-        <ul>
-          <li>Strong writing and editing skills</li>
-          <li>Knowledge of SEO best practices</li>
-          <li>Experience with content management systems</li>
-          <li>Understanding of content marketing principles</li>
-        </ul>
-        
-        <h3>Deliverables:</h3>
-        <ul>
-          <li>Blog posts and articles</li>
-          <li>Content calendar</li>
-          <li>SEO optimization reports</li>
-          <li>Content performance analytics</li>
-        </ul>
-      `,
-    },
-    {
-      id: 6,
-      title: 'Video Editor',
-      company: 'StreamMedia',
-      location: 'Los Angeles, CA',
-      type: 'Contract',
-      salary: '$55/hr',
-      posted: '4 days ago',
-      description: 'Edit and produce high-quality video content for social media and marketing campaigns. Proficiency in Adobe Creative Suite required.',
-      skills: ['Adobe Premiere', 'After Effects', 'Color Grading', 'Motion Graphics'],
-      logo: 'https://ui-avatars.com/api/?name=SM&background=000&color=fff',
-      clientRating: 4.8,
-      clientReviews: 22,
-      clientLocation: 'Los Angeles, CA',
-      clientMemberSince: '2020-11-10',
-      clientCompletedJobs: 18,
-      clientSpent: '$10,000',
-      jobType: 'Hourly',
-      experienceLevel: 'Expert',
-      projectSize: 'Medium',
-      estimatedDuration: '3-6 months',
-      additionalDetails: `
-        <h3>Project Requirements:</h3>
-        <ul>
-          <li>Edit video content for various platforms</li>
-          <li>Create motion graphics and visual effects</li>
-          <li>Color grade and enhance footage</li>
-          <li>Collaborate with creative team</li>
-          <li>Meet project deadlines</li>
-        </ul>
-        
-        <h3>Technical Requirements:</h3>
-        <ul>
-          <li>Proficiency in Adobe Premiere Pro</li>
-          <li>Experience with After Effects</li>
-          <li>Knowledge of color grading techniques</li>
-          <li>Understanding of video compression and formats</li>
-        </ul>
-        
-        <h3>Deliverables:</h3>
-        <ul>
-          <li>Edited video content</li>
-          <li>Motion graphics and effects</li>
-          <li>Color graded footage</li>
-          <li>Project files and assets</li>
-        </ul>
-      `,
-    }
-  ];
+  useEffect(() => {
+    const fetchJob = async () => {
+      try {
+        const response = await jobService.getJob(id);
+        setJob(response.job);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch job details. Please try again later.');
+        setLoading(false);
+      }
+    };
 
-  const job = jobs.find(j => j.id === parseInt(id)) || jobs[0];
+    fetchJob();
+  }, [id]);
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -312,10 +39,50 @@ const JobDetail = () => {
 
   const handleSubmitProposal = (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    if (user?.role !== 'freelancer') {
+      alert('Only freelancers can submit proposals.');
+      return;
+    }
     // This would typically handle proposal submission
     console.log('Proposal submitted:', { proposalText, bidAmount, deliveryTime });
     alert('Your proposal has been submitted successfully!');
   };
+
+  const isFreelancer = user?.role === 'freelancer';
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black pt-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center text-gray-400">Loading job details...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black pt-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center text-red-400">{error}</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!job) {
+    return (
+      <div className="min-h-screen bg-black pt-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center text-gray-400">Job not found.</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black pt-24 px-4 sm:px-6 lg:px-8">
@@ -338,11 +105,25 @@ const JobDetail = () => {
                     </div>
                     <div className="flex items-center">
                       <FiCalendar className="mr-1" />
-                      <span>Posted {job.posted}</span>
+                      <span>Posted {formatDate(job.created_at)}</span>
                     </div>
                   </div>
               </div>
-                <div className="mt-4 md:mt-0">
+                
+                <div className="mt-4 md:mt-0 flex items-center space-x-3">
+                  <button
+                    onClick={() => {
+                      if (!isAuthenticated) {
+                        navigate('/login');
+                        return;
+                      }
+                      setIsMessageBoxOpen(true);
+                    }}
+                    className="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl transition-all duration-200"
+                  >
+                    <FiMessageSquare className="mr-2" />
+                    Message
+                  </button>
                   <span className="inline-block bg-yellow-400 text-black px-4 py-2 rounded-xl text-sm font-medium">
                     {job.salary}
                 </span>
@@ -376,37 +157,36 @@ const JobDetail = () => {
               <h2 className="text-2xl font-bold text-white mb-4">About the Client</h2>
             <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center mr-4">
-                  <span className="text-xl font-bold text-white">{job.company.charAt(0)}</span>
+                  <span className="text-xl font-bold text-white">{job.client?.name?.charAt(0) || job.company.charAt(0)}</span>
               </div>
               <div>
-                  <h3 className="font-medium text-white">{job.company}</h3>
-                  <p className="text-gray-400 text-sm">{job.clientLocation}</p>
+                  <h3 className="font-medium text-white">{job.client?.name || job.company}</h3>
+                  <p className="text-gray-400 text-sm">{job.location}</p>
               </div>
-            </div>
-            
-            <div className="flex items-center mb-4">
-              <span className="text-yellow-400 mr-1">★</span>
-                <span className="font-medium text-white">{job.clientRating}</span>
-                <span className="text-gray-400 ml-1">({job.clientReviews} reviews)</span>
             </div>
             
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                  <span className="text-gray-400">Member since:</span>
-                  <span className="text-white">{formatDate(job.clientMemberSince)}</span>
+                  <span className="text-gray-400">Job Type:</span>
+                  <span className="text-white">{job.jobType}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Experience Level:</span>
+                  <span className="text-white">{job.experienceLevel}</span>
               </div>
               <div className="flex justify-between">
-                  <span className="text-gray-400">Jobs posted:</span>
-                  <span className="text-white">{job.clientCompletedJobs}</span>
+                  <span className="text-gray-400">Project Size:</span>
+                  <span className="text-white">{job.projectSize}</span>
               </div>
               <div className="flex justify-between">
-                  <span className="text-gray-400">Total spent:</span>
-                  <span className="text-white">{job.clientSpent}</span>
+                  <span className="text-gray-400">Duration:</span>
+                  <span className="text-white">{job.estimatedDuration}</span>
               </div>
             </div>
           </div>
           
-          {/* Submit Proposal Form */}
+            {/* Submit Proposal Form - Only show to freelancers */}
+            {isFreelancer && (
             <div className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-800">
               <h2 className="text-2xl font-bold text-white mb-4">Submit a Proposal</h2>
             <form onSubmit={handleSubmitProposal}>
@@ -463,9 +243,15 @@ const JobDetail = () => {
               </button>
             </form>
             </div>
+            )}
           </div>
         </div>
       </div>
+      <MessageBox
+        isOpen={isMessageBoxOpen}
+        onClose={() => setIsMessageBoxOpen(false)}
+        recipient={job.client || { name: job.company }}
+      />
     </div>
   );
 };

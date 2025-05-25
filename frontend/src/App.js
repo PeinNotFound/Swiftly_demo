@@ -24,6 +24,7 @@ import EditProfile from './pages/EditProfile';
 import FreelancerDashboard from './pages/dashboard/FreelancerDashboard';
 import ClientDashboard from './pages/dashboard/ClientDashboard';
 import AdminDashboard from './pages/dashboard/AdminDashboard';
+import PostJob from './pages/PostJob';
 
 // ScrollToTop component
 function ScrollToTop() {
@@ -124,6 +125,14 @@ const App = () => {
                     <AdminDashboard />
                   </PrivateRoute>
                 }
+              />
+              <Route 
+                path="/post-job" 
+                element={
+                  <PrivateRoute>
+                    <PostJob />
+                  </PrivateRoute>
+                } 
               />
             </Routes>
           </main>

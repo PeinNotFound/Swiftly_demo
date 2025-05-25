@@ -92,7 +92,7 @@ const EditProfile = () => {
       if (formData.profile_picture) formDataToSend.append('profile_picture', formData.profile_picture);
 
       const response = await authService.updateProfile(formDataToSend);
-      const updatedUserData = response.data.user;
+      const updatedUserData = response.data.freelancer;
 
       // Update user context with new data
       updateUser({
@@ -105,7 +105,8 @@ const EditProfile = () => {
       setFormData(prev => ({
         ...prev,
         current_password: '',
-        new_password: ''
+        new_password: '',
+        new_password_confirmation: ''
       }));
 
       setSuccess('Profile updated successfully!');

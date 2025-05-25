@@ -1,87 +1,49 @@
-import React, { useState } from 'react';
-import { FiSearch, FiFilter, FiClock, FiMapPin, FiDollarSign, FiBriefcase } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { FiSearch, FiFilter, FiClock, FiMapPin, FiDollarSign, FiBriefcase, FiPlus } from 'react-icons/fi';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { jobService } from '../services/jobService';
 
 const Jobs = () => {
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock data for demonstration
   const categories = ['All', 'Design', 'Development', 'Marketing', 'Writing', 'Video', 'Music'];
-  const jobs = [
-    {
-      id: 1,
-      title: 'Senior Full Stack Developer',
-      company: 'TechCorp Inc.',
-      location: 'Remote',
-      type: 'Full-time',
-      salary: '$80k - $120k',
-      posted: '2 days ago',
-      description: 'We are looking for an experienced Full Stack Developer to join our growing team. You will be responsible for developing and maintaining web applications using React and Node.js.',
-      skills: ['React', 'Node.js', 'PostgreSQL', 'AWS'],
-      logo: 'https://ui-avatars.com/api/?name=TC&background=000&color=fff',
-    },
-    {
-      id: 2,
-      title: 'UI/UX Designer',
-      company: 'Creative Studios',
-      location: 'San Francisco, CA',
-      type: 'Full-time',
-      salary: '$70k - $100k',
-      posted: '3 days ago',
-      description: 'Join our design team to create beautiful and intuitive user interfaces for our clients. Strong background in user-centered design principles required.',
-      skills: ['Figma', 'Adobe XD', 'User Research', 'Prototyping'],
-      logo: 'https://ui-avatars.com/api/?name=CS&background=000&color=fff',
-    },
-    {
-      id: 3,
-      title: 'Digital Marketing Manager',
-      company: 'Growth Marketing',
-      location: 'New York, NY',
-      type: 'Contract',
-      salary: '$60/hr',
-      posted: '1 week ago',
-      description: 'Lead our digital marketing initiatives across multiple channels. Experience with SEO, content marketing, and social media management required.',
-      skills: ['SEO', 'Content Strategy', 'Social Media', 'Google Analytics'],
-      logo: 'https://ui-avatars.com/api/?name=GM&background=000&color=fff',
-    },
-    {
-      id: 4,
-      title: 'Mobile App Developer',
-      company: 'AppWorks',
-      location: 'Remote',
-      type: 'Part-time',
-      salary: '$50/hr',
-      posted: '5 days ago',
-      description: 'Develop cross-platform mobile applications using React Native. Experience with iOS and Android development is a plus.',
-      skills: ['React Native', 'iOS', 'Android', 'Firebase'],
-      logo: 'https://ui-avatars.com/api/?name=AW&background=000&color=fff',
-    },
-    {
-      id: 5,
-      title: 'Content Writer',
-      company: 'ContentFirst',
-      location: 'Remote',
-      type: 'Freelance',
-      salary: '$40/hr',
-      posted: '1 day ago',
-      description: 'Create engaging content for technology and business blogs. Strong understanding of SEO and content marketing principles required.',
-      skills: ['Content Writing', 'SEO', 'Copywriting', 'Research'],
-      logo: 'https://ui-avatars.com/api/?name=CF&background=000&color=fff',
-    },
-    {
-      id: 6,
-      title: 'Video Editor',
-      company: 'StreamMedia',
-      location: 'Los Angeles, CA',
-      type: 'Contract',
-      salary: '$55/hr',
-      posted: '4 days ago',
-      description: 'Edit and produce high-quality video content for social media and marketing campaigns. Proficiency in Adobe Creative Suite required.',
-      skills: ['Adobe Premiere', 'After Effects', 'Color Grading', 'Motion Graphics'],
-      logo: 'https://ui-avatars.com/api/?name=SM&background=000&color=fff',
-    }
-  ];
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await jobService.getAllJobs();
+        setJobs(response.jobs);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error in Jobs component:', err);
+        let errorMessage = 'Failed to fetch jobs. Please try again later.';
+        
+        if (err.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          errorMessage = `Error ${err.response.status}: ${err.response.data.message || 'Server error'}`;
+        } else if (err.request) {
+          // The request was made but no response was received
+          errorMessage = 'No response from server. Please check your connection.';
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = err.message || errorMessage;
+        }
+        
+        setError(errorMessage);
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
 
   // Filter jobs based on search query and category
   const filteredJobs = jobs.filter(job => {
@@ -101,16 +63,55 @@ const Jobs = () => {
     return matchesSearch && matchesCategory;
   });
 
+  const handlePostJob = () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    navigate('/post-job');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black pt-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center text-gray-400">Loading jobs...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black pt-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center text-red-400">{error}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-black pt-24 px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto mb-12">
-        <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-          Find Your Next Project
-        </h1>
-        <p className="text-gray-400 text-lg max-w-2xl">
-          Browse through thousands of opportunities and find the perfect project that matches your skills and interests.
-        </p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+              Find Your Next Project
+            </h1>
+            <p className="text-gray-400 text-lg max-w-2xl">
+              Browse through thousands of opportunities and find the perfect project that matches your skills and interests.
+            </p>
+          </div>
+          <button
+            onClick={handlePostJob}
+            className="flex items-center px-6 py-3 bg-yellow-400 text-black rounded-xl font-medium hover:bg-yellow-500 transition-all duration-200 transform hover:scale-[1.02]"
+          >
+            <FiPlus className="mr-2" />
+            Post a Job
+          </button>
+        </div>
       </div>
 
       {/* Search and Filter Section */}
@@ -157,77 +158,84 @@ const Jobs = () => {
 
       {/* Jobs List */}
       <div className="max-w-7xl mx-auto space-y-6">
-        {filteredJobs.map((job) => (
-          <div
-            key={job.id}
-            className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-800 hover:border-yellow-400/50 transition-all duration-300 group"
-          >
-            <div className="flex items-start space-x-4">
-              <img
-                src={job.logo}
-                alt={job.company}
-                className="w-16 h-16 rounded-xl object-cover bg-gray-800"
-              />
-              <div className="flex-1">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold text-white group-hover:text-yellow-400 transition-colors">
-                      {job.title}
-                    </h3>
-                    <p className="text-gray-400">{job.company}</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="px-3 py-1 bg-yellow-400/10 text-yellow-400 rounded-lg text-sm">
-                      {job.type}
-                    </span>
-                  </div>
+        {filteredJobs.length === 0 ? (
+          <div className="text-center text-gray-400 py-12">
+            No jobs found matching your criteria.
+          </div>
+        ) : (
+          filteredJobs.map((job) => (
+            <div
+              key={job.id}
+              className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-6 border border-gray-800 hover:border-yellow-400/50 transition-all duration-300 group"
+            >
+              <div className="flex items-start space-x-4">
+                <div className="w-16 h-16 rounded-xl bg-gray-800 flex items-center justify-center">
+                  <span className="text-xl font-bold text-white">{job.company.charAt(0)}</span>
                 </div>
-
-                <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-400">
-                  <div className="flex items-center">
-                    <FiMapPin className="mr-1" />
-                    <span>{job.location}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <FiDollarSign className="mr-1" />
-                    <span>{job.salary}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <FiClock className="mr-1" />
-                    <span>{job.posted}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <FiBriefcase className="mr-1" />
-                    <span>{job.type}</span>
-                  </div>
-                </div>
-
-                <p className="mt-4 text-gray-400 line-clamp-2">
-                  {job.description}
-                </p>
-
-                <div className="mt-4">
-                  <div className="flex flex-wrap gap-2">
-                    {job.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-sm"
-                      >
-                        {skill}
+                <div className="flex-1">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="text-xl font-semibold text-white group-hover:text-yellow-400 transition-colors">
+                        {job.title}
+                      </h3>
+                      <p className="text-gray-400">{job.company}</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="px-3 py-1 bg-yellow-400/10 text-yellow-400 rounded-lg text-sm">
+                        {job.type}
                       </span>
-                    ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-400">
+                    <div className="flex items-center">
+                      <FiMapPin className="mr-1" />
+                      <span>{job.location}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <FiDollarSign className="mr-1" />
+                      <span>{job.salary}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <FiClock className="mr-1" />
+                      <span>{new Date(job.created_at).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <FiBriefcase className="mr-1" />
+                      <span>{job.type}</span>
+                    </div>
+                  </div>
+
+                  <p className="mt-4 text-gray-400 line-clamp-2">
+                    {job.description}
+                  </p>
+
+                  <div className="mt-4">
+                    <div className="flex flex-wrap gap-2">
+                      {job.skills.map((skill, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-sm"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="mt-6 flex justify-end">
-              <button className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02]">
-              <Link to={`/job/${job.id}`}>Details</Link>
-              </button>
+              <div className="mt-6 flex justify-end">
+                <button 
+                  onClick={() => navigate(`/job/${job.id}`)}
+                  className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl font-medium transition-all duration-200 transform hover:scale-[1.02]"
+                >
+                  View Details
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
