@@ -23,9 +23,8 @@ class User extends Authenticatable
         'password',
         'role',
         'bio',
-        'skills',
-        'hourly_rate',
-        'availability',
+        'title',
+        'location',
         'profile_picture',
     ];
 
@@ -109,5 +108,13 @@ class User extends Authenticatable
             return asset('storage/profile_pictures/' . $this->profile_picture);
         }
         return null;
+    }
+
+    /**
+     * Get the freelancer profile associated with the user.
+     */
+    public function freelancer()
+    {
+        return $this->hasOne(Freelancer::class);
     }
 }

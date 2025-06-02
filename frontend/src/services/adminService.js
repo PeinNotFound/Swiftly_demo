@@ -44,9 +44,7 @@ export const adminService = {
     // Freelancer Management
     getFreelancers: async () => {
         try {
-            const response = await axios.get(`${API_URL}/api/admin/freelancers`, {
-                headers: getAuthHeader()
-            });
+            const response = await axios.get(`${API_URL}/api/freelancers`);
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;

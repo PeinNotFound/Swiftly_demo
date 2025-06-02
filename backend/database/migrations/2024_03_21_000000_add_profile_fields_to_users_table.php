@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->text('bio')->nullable();
-            $table->string('skills')->nullable();
-            $table->decimal('hourly_rate', 10, 2)->nullable();
-            $table->string('availability')->default('available');
+            $table->string('title')->nullable();
+            $table->string('location')->nullable();
             $table->string('profile_picture')->nullable();
         });
     }
@@ -28,9 +27,8 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn([
                 'bio',
-                'skills',
-                'hourly_rate',
-                'availability',
+                'title',
+                'location',
                 'profile_picture'
             ]);
         });

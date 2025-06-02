@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\FreelancerController;
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/freelancers', [AdminController::class, 'getFreelancers']);
+Route::get('/freelancers', [FreelancerController::class, 'index']);
 
 // Public job routes
 Route::get('/jobs', [JobController::class, 'index']);
@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/stats', [AdminController::class, 'getStats']);
 
         // Freelancer Management
+        Route::get('/freelancers', [AdminController::class, 'getFreelancers']);
         Route::put('/freelancers/{id}/verify', [AdminController::class, 'verifyFreelancer']);
         Route::put('/freelancers/{id}/suspend', [AdminController::class, 'suspendFreelancer']);
         Route::get('/freelancers/stats', [AdminController::class, 'getFreelancerStats']);
@@ -56,7 +57,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Freelancer Management Routes (Admin only)
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-    Route::get('/freelancers', [FreelancerController::class, 'index']);
     Route::post('/freelancers/{id}/approve', [FreelancerController::class, 'approve']);
     Route::post('/freelancers/{id}/reject', [FreelancerController::class, 'reject']);
     Route::post('/freelancers/{id}/verify', [FreelancerController::class, 'verify']);

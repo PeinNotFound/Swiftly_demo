@@ -12,14 +12,28 @@ class Freelancer extends Model
         'is_approved',
         'is_verified',
         'is_suspended',
-        'skills'
+        'skills',
+        'hourly_rate',
+        'availability',
+        'education',
+        'languages',
+        'completed_projects_count',
+        'average_rating',
+        'portfolio'
     ];
 
     protected $casts = [
         'is_approved' => 'boolean',
         'is_verified' => 'boolean',
         'is_suspended' => 'boolean',
-        'skills' => 'array'
+        'skills' => 'array',
+        'hourly_rate' => 'float',
+        'availability' => 'array',
+        'education' => 'array',
+        'languages' => 'array',
+        'portfolio' => 'array',
+        'completed_projects_count' => 'integer',
+        'average_rating' => 'float'
     ];
 
     public function user(): BelongsTo

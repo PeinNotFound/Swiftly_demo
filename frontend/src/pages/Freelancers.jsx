@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiSearch, FiFilter, FiStar, FiMapPin, FiDollarSign } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { adminService } from '../services/adminService';
+import { freelancerService } from '../services/freelancerService';
 
 const Freelancers = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -15,11 +15,26 @@ const Freelancers = () => {
     const fetchFreelancers = async () => {
       try {
         setLoading(true);
-        const response = await adminService.getFreelancers();
+        const response = await freelancerService.getFreelancers();
+        console.log('Freelancers response:', response); // Debug log
+        
+        if (!response || !response.freelancers) {
+          console.error('Invalid response format:', response);
+          setError('Invalid response format from server');
+          return;
+        }
+
+        if (!Array.isArray(response.freelancers)) {
+          console.error('Freelancers data is not an array:', response.freelancers);
+          setError('Invalid freelancers data format');
+          return;
+        }
+
         setFreelancers(response.freelancers);
         setError(null);
       } catch (err) {
-        setError('Failed to fetch freelancers');
+        console.error('Error fetching freelancers:', err);
+        setError(err.message || 'Failed to fetch freelancers');
       } finally {
         setLoading(false);
       }
@@ -148,14 +163,20 @@ const Freelancers = () => {
 
               <div className="mt-4">
                 <div className="flex flex-wrap gap-2">
-                  {freelancer.skills && freelancer.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-sm"
-                    >
-                      {skill}
+                  {Array.isArray(freelancer.skills) ? (
+                    freelancer.skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-sm"
+                      >
+                        {skill}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="px-3 py-1 bg-gray-800 text-gray-300 rounded-lg text-sm">
+                      No skills listed
                     </span>
-                  ))}
+                  )}
                 </div>
               </div>
 
