@@ -18,6 +18,8 @@ const EditProfile = () => {
     hourly_rate: '',
     availability: 'available',
     profile_picture: null,
+    title: '',
+    location: '',
   });
   const [previewUrl, setPreviewUrl] = useState('');
   const [error, setError] = useState('');
@@ -34,6 +36,8 @@ const EditProfile = () => {
         skills: user.skills || '',
         hourly_rate: user.hourly_rate || '',
         availability: user.availability || 'available',
+        title: user.title || '',
+        location: user.location || '',
       }));
       // Set initial profile picture preview if exists
       if (user.profile_picture) {
@@ -86,13 +90,19 @@ const EditProfile = () => {
       if (formData.current_password) formDataToSend.append('current_password', formData.current_password);
       if (formData.new_password) formDataToSend.append('new_password', formData.new_password);
       if (formData.bio) formDataToSend.append('bio', formData.bio);
-      if (formData.skills) formDataToSend.append('skills', formData.skills);
-      if (formData.hourly_rate) formDataToSend.append('hourly_rate', formData.hourly_rate);
-      if (formData.availability) formDataToSend.append('availability', formData.availability);
       if (formData.profile_picture) formDataToSend.append('profile_picture', formData.profile_picture);
+      if (formData.title) formDataToSend.append('title', formData.title);
+      if (formData.location) formDataToSend.append('location', formData.location);
+
+      // Only send freelancer fields if user is a freelancer
+      if (user && user.role === 'freelancer') {
+        if (formData.skills) formDataToSend.append('skills', formData.skills);
+        if (formData.hourly_rate) formDataToSend.append('hourly_rate', formData.hourly_rate);
+        if (formData.availability) formDataToSend.append('availability', formData.availability);
+      }
 
       const response = await authService.updateProfile(formDataToSend);
-      const updatedUserData = response.data.freelancer;
+      const updatedUserData = response.data.freelancer || response.data.user;
 
       // Update user context with new data
       updateUser({
@@ -111,7 +121,7 @@ const EditProfile = () => {
 
       setSuccess('Profile updated successfully!');
       setTimeout(() => {
-        navigate(user.role === 'admin' ? '/dashboard/admin' : '/dashboard/freelancer');
+        navigate(user.role === 'admin' ? '/dashboard/admin' : user.role === 'client' ? '/dashboard/client' : '/dashboard/freelancer');
       }, 2000);
     } catch (err) {
       setError(err.message || 'Failed to update profile');

@@ -85,7 +85,19 @@ const authService = {
             // Laravel needs method override for PUT with FormData
             formData.append('_method', 'PUT');
 
-            const response = await api.post('/freelancers/profile', formData, {
+            // Determine endpoint based on user role
+            const userStr = localStorage.getItem('user');
+            let endpoint = '/profile';
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                if (user.role === 'freelancer') {
+                    endpoint = '/freelancers/profile';
+                } else if (user.role === 'client') {
+                    endpoint = '/clients/profile';
+                }
+            }
+
+            const response = await api.post(endpoint, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 }

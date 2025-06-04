@@ -51,7 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Client routes
     Route::middleware('role:client')->group(function () {
-        // Add client specific routes here
+        Route::put('/clients/profile', [ProfileController::class, 'updateClientProfile']);
     });
 });
 
