@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Freelancer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -26,6 +27,25 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
+
+        // Create freelancer record if role is freelancer
+        if ($request->role === 'freelancer') {
+            $freelancer = Freelancer::create([
+                'user_id' => $user->id,
+                'is_approved' => false,
+                'is_verified' => false,
+                'is_suspended' => false,
+                'skills' => [],
+                'hourly_rate' => null,
+                'availability' => 'available',
+                'education' => [],
+                'languages' => [],
+                'completed_projects_count' => 0,
+                'average_rating' => 0,
+                'portfolio' => []
+            ]);
+            \Log::info('Freelancer created for user', ['user_id' => $user->id, 'freelancer_id' => $freelancer->id]);
+        }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 

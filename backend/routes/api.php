@@ -56,7 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // Freelancer Management Routes (Admin only)
-Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::post('/freelancers/{id}/approve', [FreelancerController::class, 'approve']);
     Route::post('/freelancers/{id}/reject', [FreelancerController::class, 'reject']);
     Route::post('/freelancers/{id}/verify', [FreelancerController::class, 'verify']);
