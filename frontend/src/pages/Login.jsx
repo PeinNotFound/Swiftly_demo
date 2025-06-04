@@ -37,7 +37,17 @@ const Login = () => {
         setError(response.message || 'Login failed');
       }
     } catch (error) {
-      setError(error.response?.data?.message || 'An error occurred during login');
+      // Try to get the backend message, fallback to generic
+      let backendMsg = error.response?.data?.message;
+      // If there are validation errors, append them
+      if (error.response?.data?.errors) {
+        const errors = error.response.data.errors;
+        const errorDetails = Object.keys(errors)
+          .map(field => `${field}: ${errors[field].join(', ')}`)
+          .join(' | ');
+        backendMsg = backendMsg ? `${backendMsg} (${errorDetails})` : errorDetails;
+      }
+      setError(backendMsg || error.message || 'An error occurred during login');
     } finally {
       setIsLoading(false);
     }

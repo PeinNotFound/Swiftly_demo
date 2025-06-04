@@ -79,6 +79,16 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
+
+        // Block suspended freelancers from logging in
+        if ($user->role === 'freelancer' && $user->freelancer && $user->freelancer->is_suspended) {
+            // Log out the user if they were logged in
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => ['Your account has been suspended. Please contact support for more information.'],
+            ]);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // Format user data with profile picture URL

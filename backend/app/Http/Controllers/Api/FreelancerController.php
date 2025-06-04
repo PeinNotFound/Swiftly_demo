@@ -13,6 +13,9 @@ class FreelancerController extends Controller
     public function index()
     {
         $freelancers = User::where('role', 'freelancer')
+            ->whereHas('freelancer', function ($query) {
+                $query->where('is_suspended', false);
+            })
             ->with('freelancer')
             ->get()
             ->map(function ($user) {
