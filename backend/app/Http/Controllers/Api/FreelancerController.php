@@ -50,8 +50,11 @@ class FreelancerController extends Controller
     public function approve($id)
     {
         $freelancer = Freelancer::where('user_id', $id)->firstOrFail();
-        $freelancer->update(['is_approved' => true]);
-        return response()->json(['message' => 'Freelancer approved successfully']);
+        $freelancer->update([
+            'is_approved' => true,
+            'is_verified' => true
+        ]);
+        return response()->json(['message' => 'Freelancer approved and verified successfully']);
     }
 
     public function reject($id)
