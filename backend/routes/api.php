@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Api\FreelancerController;
+use App\Models\Message;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -61,4 +62,18 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::post('/freelancers/{id}/reject', [FreelancerController::class, 'reject']);
     Route::post('/freelancers/{id}/verify', [FreelancerController::class, 'verify']);
     Route::post('/freelancers/{id}/suspend', [FreelancerController::class, 'suspend']);
+});
+
+Route::get('/mongo-test', function () {
+    try {
+        $msg = Message::create([
+            'userId' => 'testUser',
+            'freelancerId' => 'testFreelancer',
+            'content' => 'Testing MongoDB connection!',
+            'timestamp' => now(),
+        ]);
+        return response()->json(['success' => true, 'message' => $msg]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'error' => $e->getMessage()]);
+    }
 });

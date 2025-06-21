@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FiSend } from 'react-icons/fi';
-import authService from '../../services/authService';
+import messageService from '../../services/messageService';
 
 const Chat = ({ userId, freelancerId }) => {
   const [messages, setMessages] = useState([]);
@@ -8,45 +8,76 @@ const Chat = ({ userId, freelancerId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Convert IDs to strings for consistent comparison
+  const userIdStr = userId?.toString();
+  const freelancerIdStr = freelancerId?.toString();
+
   // Fetch messages when component mounts
   useEffect(() => {
     const fetchMessages = async () => {
+      if (!userIdStr || !freelancerIdStr) {
+        console.log('Missing user IDs:', { userIdStr, freelancerIdStr });
+        return;
+      }
+
       try {
-        const response = await authService.api.get(`/messages/${userId}/${freelancerId}`);
-        const data = response.data;
-        setMessages(data.messages);
+        console.log('Fetching messages for:', { userIdStr, freelancerIdStr });
+        const data = await messageService.getMessages(userIdStr, freelancerIdStr);
+        console.log('Received messages:', data);
+        setMessages(data);
       } catch (error) {
+        console.error('Failed to fetch messages:', error);
         setError('Failed to fetch messages');
       }
     };
 
     fetchMessages();
-  }, [userId, freelancerId]);
+    const intervalId = setInterval(fetchMessages, 5000);
+    return () => clearInterval(intervalId);
+  }, [userIdStr, freelancerIdStr]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !userIdStr || !freelancerIdStr) return;
 
+    setIsLoading(true);
     try {
-      const response = await authService.api.post('/messages', {
-        sender_id: userId,
-        receiver_id: freelancerId,
-        message: newMessage
+      console.log('Sending message:', {
+        userId: userIdStr,
+        freelancerId: freelancerIdStr,
+        content: newMessage
       });
 
-      const sentMessage = response.data.message;
-      setMessages(prev => [...prev, sentMessage]);
+      const sentMessage = await messageService.sendMessage(userIdStr, freelancerIdStr, newMessage);
+      console.log('Message sent successfully:', sentMessage);
+
+      // Update messages immediately with the new message
+      setMessages(prev => {
+        const newMessages = [...prev, sentMessage];
+        console.log('Updated messages:', newMessages);
+        return newMessages;
+      });
+      
       setNewMessage('');
+      setError(null);
     } catch (error) {
+      console.error('Failed to send message:', error);
       setError('Failed to send message');
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  // Debug log for messages
+  useEffect(() => {
+    console.log('Current messages state:', messages);
+  }, [messages]);
 
   return (
     <div className="flex flex-col h-[600px] bg-gray-900/50 backdrop-blur-xl rounded-2xl border border-gray-800">
       {/* Chat Header */}
       <div className="p-4 border-b border-gray-800">
-        <h2 className="text-xl font-semibold text-white">Chat</h2>
+        <h2 className="text-xl font-semibold text-white">Chat with User {freelancerIdStr}</h2>
       </div>
 
       {/* Error Message */}
@@ -63,27 +94,34 @@ const Chat = ({ userId, freelancerId }) => {
             No messages yet. Start the conversation!
           </div>
         ) : (
-          messages.map((message) => (
-            <div
-              key={message._id}
-              className={`flex ${
-                message.userId === userId ? 'justify-end' : 'justify-start'
-              }`}
-            >
+          messages.map((message) => {
+            const isOwnMessage = message.userId.toString() === userIdStr;
+            console.log('Message ownership check:', {
+              messageUserId: message.userId.toString(),
+              currentUserId: userIdStr,
+              isOwnMessage
+            });
+
+            return (
               <div
-                className={`max-w-[70%] rounded-lg p-3 ${
-                  message.userId === userId
-                    ? 'bg-yellow-400 text-black'
-                    : 'bg-gray-800 text-white'
-                }`}
+                key={message._id}
+                className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
               >
-                <p>{message.content}</p>
-                <span className="text-xs opacity-70">
-                  {new Date(message.timestamp).toLocaleTimeString()}
-                </span>
+                <div
+                  className={`max-w-[70%] rounded-lg p-3 ${
+                    isOwnMessage
+                      ? 'bg-yellow-400 text-black'
+                      : 'bg-gray-800 text-white'
+                  }`}
+                >
+                  <p>{message.content}</p>
+                  <span className="text-xs opacity-70">
+                    {new Date(message.timestamp).toLocaleTimeString()}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 

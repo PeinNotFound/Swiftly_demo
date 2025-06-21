@@ -1,88 +1,110 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import messageService from '../../services/messageService';
 
 const ChatHistory = () => {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const fetchChats = useCallback(async () => {
+    try {
+      console.log('=== ChatHistory Debug ===');
+      console.log('1. Current user:', user);
+      
+      if (!user || !user.id) {
+        console.log('2. No user found in localStorage');
+        setError('Please log in to view your chats');
+        setLoading(false);
+        return;
+      }
+
+      const userIdStr = user.id.toString();
+      console.log('3. Fetching chats for userId:', userIdStr);
+      
+      const response = await messageService.getChatPartners(userIdStr);
+      console.log('4. Chat partners response:', response);
+      
+      if (!Array.isArray(response)) {
+        console.error('5. Invalid response format:', response);
+        setError('Invalid response from server');
+        setLoading(false);
+        return;
+      }
+
+      console.log('6. Setting chats state with:', response);
+      setChats(response);
+      setLoading(false);
+    } catch (err) {
+      console.error('7. Error fetching chats:', err);
+      setError(err.message || 'Failed to load chats');
+      setLoading(false);
+    }
+  }, [user]);
 
   useEffect(() => {
-    const fetchChats = async () => {
-      try {
-        // TODO: Replace with actual API call
-        const response = await fetch('http://localhost:5000/api/messages/1/1');
-        const data = await response.json();
-        setChats(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching chats:', error);
-        setLoading(false);
-      }
-    };
-
+    console.log('8. ChatHistory mounted, user:', user);
     fetchChats();
-  }, []);
+    
+    // Set up polling
+    const interval = setInterval(fetchChats, 5000);
+    return () => clearInterval(interval);
+  }, [fetchChats]);
+
+  const handleChatClick = (partnerId) => {
+    console.log('9. Chat clicked with partnerId:', partnerId);
+    navigate(`/chat/${partnerId}`);
+  };
 
   if (loading) {
+    return <div className="flex justify-center items-center h-full">Loading chats...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500 text-center p-4">{error}</div>;
+  }
+
+  if (!chats || chats.length === 0) {
     return (
-      <div className="p-4">
-        <div className="animate-pulse space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex items-center space-x-4">
-              <div className="h-12 w-12 bg-gray-700 rounded-full"></div>
-              <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gray-700 rounded w-3/4"></div>
-                <div className="h-3 bg-gray-700 rounded w-1/2"></div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="text-center p-4">
+        <p className="text-gray-500">You have no active conversations</p>
+        <p className="text-sm text-gray-400 mt-2">Start a new chat by visiting a freelancer's profile</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-900 rounded-lg shadow-lg">
-      <div className="p-4 border-b border-gray-800">
-        <h2 className="text-xl font-semibold text-gray-200">Recent Chats</h2>
-      </div>
-      <div className="divide-y divide-gray-800">
-        {chats.length > 0 ? (
-          chats.map((chat) => (
-            <Link
-              key={chat._id}
-              to={`/chat/${chat.freelancerId}`}
-              className="block p-4 hover:bg-gray-800/50 transition-colors"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0">
-                  <img
-                    className="h-12 w-12 rounded-full"
-                    src={`https://via.placeholder.com/40?text=${chat.freelancerId}`}
-                    alt=""
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-200 truncate">
-                    Freelancer {chat.freelancerId}
-                  </p>
-                  <p className="text-sm text-gray-400 truncate">
-                    {chat.content}
-                  </p>
-                </div>
-                <div className="flex-shrink-0">
-                  <p className="text-xs text-gray-500">
-                    {new Date(chat.timestamp).toLocaleTimeString()}
-                  </p>
-                </div>
+    <div className="space-y-2">
+      {chats.map((chat) => {
+        console.log('10. Rendering chat:', chat);
+        return (
+          <div
+            key={chat._id}
+            onClick={() => handleChatClick(chat.freelancerId)}
+            className="flex items-center p-3 hover:bg-gray-100 cursor-pointer rounded-lg transition-colors"
+          >
+            <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold mr-3">
+              {chat.partnerName.charAt(0)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex justify-between items-start">
+                <h3 className="font-semibold text-gray-900 truncate">
+                  {chat.partnerName}
+                </h3>
+                <span className="text-xs text-gray-500">
+                  {new Date(chat.lastMessageTime).toLocaleTimeString()}
+                </span>
               </div>
-            </Link>
-          ))
-        ) : (
-          <div className="p-4 text-center text-gray-400">
-            No recent chats
+              <p className="text-sm text-gray-600 truncate">
+                {chat.isCurrentUserSender ? 'You: ' : ''}{chat.lastMessage}
+              </p>
+            </div>
           </div>
-        )}
-      </div>
+        );
+      })}
     </div>
   );
 };

@@ -96,9 +96,9 @@ const EditProfile = () => {
 
       // Only send freelancer fields if user is a freelancer
       if (user && user.role === 'freelancer') {
-        if (formData.skills) formDataToSend.append('skills', formData.skills);
-        if (formData.hourly_rate) formDataToSend.append('hourly_rate', formData.hourly_rate);
-        if (formData.availability) formDataToSend.append('availability', formData.availability);
+      if (formData.skills) formDataToSend.append('skills', formData.skills);
+      if (formData.hourly_rate) formDataToSend.append('hourly_rate', formData.hourly_rate);
+      if (formData.availability) formDataToSend.append('availability', formData.availability);
       }
 
       const response = await authService.updateProfile(formDataToSend);
