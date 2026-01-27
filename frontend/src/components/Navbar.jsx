@@ -10,14 +10,15 @@ const Navbar = () => {
   const location = useLocation();
   const profileRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  const mobileButtonRef = useRef(null);
 
   const isActivePath = (path) => {
     return location.pathname === path;
   };
 
   const navLinkClasses = (path) => `px-3 py-2 text-[15px] rounded-md transition-all duration-200 relative
-    ${isActivePath(path) 
-      ? 'text-yellow-400 bg-gray-800/80' 
+    ${isActivePath(path)
+      ? 'text-yellow-400 bg-gray-800/80'
       : 'text-gray-300 hover:text-yellow-400 hover:bg-gray-800/80'}
     after:content-["\""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] 
     after:bg-yellow-400 after:transform after:scale-x-0 after:origin-left after:transition-transform
@@ -35,7 +36,11 @@ const Navbar = () => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setIsProfileOpen(false);
       }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target) &&
+        !mobileButtonRef.current?.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
@@ -136,7 +141,8 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Left side - Logo and Navigation */}
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 transform hover:scale-105 transition-transform duration-300">
+            <Link to="/" className="flex-shrink-0 flex items-center gap-2 transform hover:scale-105 transition-transform duration-300">
+              <img src="/logo192.png" alt="Swiftly Logo" className="h-8 w-8 object-contain" />
               <span className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
                 Swiftly
               </span>
@@ -145,98 +151,84 @@ const Navbar = () => {
               <div className="flex items-baseline space-x-6">
                 <Link
                   to="/"
-                  className={`text-[15px] font-medium transition-all duration-300 relative group ${
-                    isActivePath("/") 
-                      ? "text-yellow-400" 
-                      : "text-gray-300 hover:text-yellow-400"
-                  }`}
+                  className={`text-[15px] font-medium transition-all duration-300 relative group ${isActivePath("/")
+                    ? "text-yellow-400"
+                    : "text-gray-300 hover:text-yellow-400"
+                    }`}
                 >
                   Home
-                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${
-                    isActivePath("/") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                  }`}></span>
+                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${isActivePath("/") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                    }`}></span>
                 </Link>
                 <Link
                   to="/jobs"
-                  className={`text-[15px] font-medium transition-all duration-300 relative group ${
-                    isActivePath("/jobs") 
-                      ? "text-yellow-400" 
-                      : "text-gray-300 hover:text-yellow-400"
-                  }`}
+                  className={`text-[15px] font-medium transition-all duration-300 relative group ${isActivePath("/jobs")
+                    ? "text-yellow-400"
+                    : "text-gray-300 hover:text-yellow-400"
+                    }`}
                 >
                   Find Jobs
-                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${
-                    isActivePath("/jobs") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                  }`}></span>
+                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${isActivePath("/jobs") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                    }`}></span>
                 </Link>
                 <Link
                   to="/freelancers"
-                  className={`text-[15px] font-medium transition-all duration-300 relative group ${
-                    isActivePath("/freelancers") 
-                      ? "text-yellow-400" 
-                      : "text-gray-300 hover:text-yellow-400"
-                  }`}
+                  className={`text-[15px] font-medium transition-all duration-300 relative group ${isActivePath("/freelancers")
+                    ? "text-yellow-400"
+                    : "text-gray-300 hover:text-yellow-400"
+                    }`}
                 >
                   Find Freelancers
-                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${
-                    isActivePath("/freelancers") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                  }`}></span>
+                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${isActivePath("/freelancers") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                    }`}></span>
                 </Link>
                 {user?.role === 'admin' && (
                   <Link
                     to="/dashboard/admin"
-                    className={`text-[15px] font-medium transition-all duration-300 relative group ${
-                      isActivePath("/dashboard/admin") 
-                        ? "text-yellow-400" 
-                        : "text-gray-300 hover:text-yellow-400"
-                    }`}
+                    className={`text-[15px] font-medium transition-all duration-300 relative group ${isActivePath("/dashboard/admin")
+                      ? "text-yellow-400"
+                      : "text-gray-300 hover:text-yellow-400"
+                      }`}
                   >
                     Admin Dashboard
-                    <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${
-                      isActivePath("/dashboard/admin") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                    }`}></span>
+                    <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${isActivePath("/dashboard/admin") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                      }`}></span>
                   </Link>
                 )}
                 {user?.role === 'freelancer' && (
                   <Link
                     to="/dashboard/freelancer"
-                    className={`text-[15px] font-medium transition-all duration-300 relative group ${
-                      isActivePath("/dashboard/freelancer") 
-                        ? "text-yellow-400" 
-                        : "text-gray-300 hover:text-yellow-400"
-                    }`}
+                    className={`text-[15px] font-medium transition-all duration-300 relative group ${isActivePath("/dashboard/freelancer")
+                      ? "text-yellow-400"
+                      : "text-gray-300 hover:text-yellow-400"
+                      }`}
                   >
                     Freelancer Dashboard
-                    <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${
-                      isActivePath("/dashboard/freelancer") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                    }`}></span>
+                    <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${isActivePath("/dashboard/freelancer") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                      }`}></span>
                   </Link>
                 )}
                 <Link
                   to="/about"
-                  className={`text-[15px] font-medium transition-all duration-300 relative group ${
-                    isActivePath("/about") 
-                      ? "text-yellow-400" 
-                      : "text-gray-300 hover:text-yellow-400"
-                  }`}
+                  className={`text-[15px] font-medium transition-all duration-300 relative group ${isActivePath("/about")
+                    ? "text-yellow-400"
+                    : "text-gray-300 hover:text-yellow-400"
+                    }`}
                 >
                   About
-                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${
-                    isActivePath("/about") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                  }`}></span>
+                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${isActivePath("/about") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                    }`}></span>
                 </Link>
                 <Link
                   to="/contact"
-                  className={`text-[15px] font-medium transition-all duration-300 relative group ${
-                    isActivePath("/contact") 
-                      ? "text-yellow-400" 
-                      : "text-gray-300 hover:text-yellow-400"
-                  }`}
+                  className={`text-[15px] font-medium transition-all duration-300 relative group ${isActivePath("/contact")
+                    ? "text-yellow-400"
+                    : "text-gray-300 hover:text-yellow-400"
+                    }`}
                 >
                   Contact
-                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${
-                    isActivePath("/contact") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                  }`}></span>
+                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400 transition-all duration-300 ${isActivePath("/contact") ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                    }`}></span>
                 </Link>
               </div>
             </div>
@@ -250,6 +242,7 @@ const Navbar = () => {
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
+              ref={mobileButtonRef}
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-300 hover:text-yellow-400 transition-all duration-300"
             >
@@ -284,49 +277,44 @@ const Navbar = () => {
       {/* Mobile menu */}
       <div
         ref={mobileMenuRef}
-        className={`md:hidden transition-all duration-300 ease-in-out ${
-          isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-        } overflow-hidden`}
+        className={`md:hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+          } overflow-hidden`}
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-900/95 backdrop-blur-sm">
           <Link
             to="/"
-            className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${
-              isActivePath("/") 
-                ? "text-yellow-400 bg-gray-800/80" 
-                : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
-            }`}
+            className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${isActivePath("/")
+              ? "text-yellow-400 bg-gray-800/80"
+              : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
           >
             Home
           </Link>
           <Link
             to="/jobs"
-            className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${
-              isActivePath("/jobs") 
-                ? "text-yellow-400 bg-gray-800/80" 
-                : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
-            }`}
+            className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${isActivePath("/jobs")
+              ? "text-yellow-400 bg-gray-800/80"
+              : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
           >
             Find Jobs
           </Link>
           <Link
             to="/freelancers"
-            className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${
-              isActivePath("/freelancers") 
-                ? "text-yellow-400 bg-gray-800/80" 
-                : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
-            }`}
+            className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${isActivePath("/freelancers")
+              ? "text-yellow-400 bg-gray-800/80"
+              : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
           >
             Find Freelancers
           </Link>
           {user?.role === 'admin' && (
             <Link
               to="/dashboard/admin"
-              className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${
-                isActivePath("/dashboard/admin") 
-                  ? "text-yellow-400 bg-gray-800/80" 
-                  : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
-              }`}
+              className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${isActivePath("/dashboard/admin")
+                ? "text-yellow-400 bg-gray-800/80"
+                : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+                }`}
             >
               Admin Dashboard
             </Link>
@@ -334,32 +322,29 @@ const Navbar = () => {
           {user?.role === 'freelancer' && (
             <Link
               to="/dashboard/freelancer"
-              className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${
-                isActivePath("/dashboard/freelancer") 
-                  ? "text-yellow-400 bg-gray-800/80" 
-                  : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
-              }`}
+              className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${isActivePath("/dashboard/freelancer")
+                ? "text-yellow-400 bg-gray-800/80"
+                : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+                }`}
             >
               Freelancer Dashboard
             </Link>
           )}
           <Link
             to="/about"
-            className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${
-              isActivePath("/about") 
-                ? "text-yellow-400 bg-gray-800/80" 
-                : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
-            }`}
+            className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${isActivePath("/about")
+              ? "text-yellow-400 bg-gray-800/80"
+              : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
           >
             About
           </Link>
           <Link
             to="/contact"
-            className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${
-              isActivePath("/contact") 
-                ? "text-yellow-400 bg-gray-800/80" 
-                : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
-            }`}
+            className={`block px-3 py-2 text-[15px] font-medium rounded-md transition-all duration-200 ${isActivePath("/contact")
+              ? "text-yellow-400 bg-gray-800/80"
+              : "text-gray-300 hover:bg-gray-800/80 hover:text-yellow-400"
+              }`}
           >
             Contact
           </Link>
