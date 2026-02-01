@@ -12,6 +12,7 @@ import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import VerifyEmail from './pages/VerifyEmail';
 import Freelancers from './pages/Freelancers';
 import FreelancerProfile from './pages/FreelancerProfile';
 import About from './pages/About';
@@ -66,57 +67,58 @@ const App = () => {
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              
+              <Route path="/verify-email" element={<VerifyEmail />} />
+
               {/* Public Job and Freelancer Routes */}
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/job/:id" element={<JobDetail />} />
               <Route path="/freelancers" element={<Freelancers />} />
               <Route path="/freelancer/:id" element={<FreelancerProfile />} />
-              
+
               {/* Protected Chat Routes */}
-              <Route 
-                path="/chat/:freelancerId" 
+              <Route
+                path="/chat/:freelancerId"
                 element={
                   <PrivateRoute>
                     <ChatPage />
                   </PrivateRoute>
-                } 
+                }
               />
-              <Route 
-                path="/chats" 
+              <Route
+                path="/chats"
                 element={
                   <PrivateRoute>
                     <ChatsPage />
                   </PrivateRoute>
-                } 
+                }
               />
-              
+
               {/* Protected Profile Route */}
-              <Route 
-                path="/profile" 
+              <Route
+                path="/profile"
                 element={
                   <PrivateRoute>
                     <EditProfile />
                   </PrivateRoute>
-                } 
+                }
               />
-              
+
               {/* Protected Dashboard Routes */}
-              <Route 
-                path="/dashboard/freelancer" 
+              <Route
+                path="/dashboard/freelancer"
                 element={
                   <PrivateRoute roles={['freelancer']}>
                     <FreelancerDashboard />
                   </PrivateRoute>
-                } 
+                }
               />
-              <Route 
-                path="/dashboard/client" 
+              <Route
+                path="/dashboard/client"
                 element={
                   <PrivateRoute roles={['client']}>
                     <ClientDashboard />
                   </PrivateRoute>
-                } 
+                }
               />
               <Route
                 path="/dashboard/admin/*"
@@ -126,13 +128,13 @@ const App = () => {
                   </PrivateRoute>
                 }
               />
-              <Route 
-                path="/post-job" 
+              <Route
+                path="/post-job"
                 element={
                   <PrivateRoute>
                     <PostJob />
                   </PrivateRoute>
-                } 
+                }
               />
             </Routes>
           </main>

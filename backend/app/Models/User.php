@@ -26,6 +26,9 @@ class User extends Authenticatable
         'title',
         'location',
         'profile_picture',
+        'is_email_verified',
+        'otp_code',
+        'otp_expires_at',
     ];
 
     /**
@@ -47,6 +50,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'hourly_rate' => 'float',
+        'is_email_verified' => 'boolean',
+        'otp_expires_at' => 'datetime',
     ];
 
     /**

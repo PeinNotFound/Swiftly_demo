@@ -51,6 +51,24 @@ const authService = {
         }
     },
 
+    async verifyOtp(data) {
+        try {
+            const response = await api.post('/verify-otp', data);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    },
+
+    async resendOtp(data) {
+        try {
+            const response = await api.post('/resend-otp', data);
+            return response.data;
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    },
+
     async logout() {
         try {
             await api.post('/logout');

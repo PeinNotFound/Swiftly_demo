@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import NumberTicker from '../components/animation/NumberTicker';
 import Globe, { FloatingTitle3D } from '../components/animation/Globe';
+import cellphoneGif from '../assets/cellphone.gif';
+import monitorGif from '../assets/monitor.gif';
 
 const Home = () => {
   const [videoSrc, setVideoSrc] = React.useState(
@@ -39,7 +41,7 @@ const Home = () => {
         <div className="w-[100px] h-[100px] flex items-center justify-center">
           <lord-icon
             src="https://cdn.lordicon.com/msoeawqm.json" // Search/People icon
-            trigger="hover"
+            trigger="loop"
             colors="primary:#121331,secondary:#ffc738"
             style={{ width: '100%', height: '100%' }}
           />
@@ -54,7 +56,7 @@ const Home = () => {
         <div className="w-[100px] h-[100px] flex items-center justify-center">
           <lord-icon
             src="https://cdn.lordicon.com/edplgash.json"
-            trigger="hover"
+            trigger="loop"
             colors="primary:#ffc738,secondary:#3a3347,tertiary:#d1e3fa"
             style={{ width: '100%', height: '100%' }}
           />
@@ -69,7 +71,7 @@ const Home = () => {
         <div className="w-[100px] h-[100px] flex items-center justify-center">
           <lord-icon
             src="https://cdn.lordicon.com/byicyhmi.json"
-            trigger="hover"
+            trigger="loop"
             colors="primary:#646e78,secondary:#f9c9c0,tertiary:#d1e3fa,quaternary:#b26836,quinary:#eee966"
             style={{ width: '100%', height: '100%' }}
           />
@@ -84,7 +86,7 @@ const Home = () => {
         <div className="w-[100px] h-[100px] flex items-center justify-center">
           <lord-icon
             src="https://cdn.lordicon.com/oaflahpk.json" // Globe/World icon
-            trigger="hover"
+            trigger="loop"
             colors="primary:#fbbf24,secondary:#ffffff"
             style={{ width: '100%', height: '100%' }}
           />
@@ -98,8 +100,8 @@ const Home = () => {
       icon: (
         <div className="w-[100px] h-[100px] flex items-center justify-center">
           <lord-icon
-            src="https://cdn.lordicon.com/jxwksgwv.json"
-            trigger="hover"
+            src="https://cdn.lordicon.com/fgxwhgfp.json"
+            trigger="loop"
             colors="primary:#fbbf24,secondary:#ffffff"
             style={{ width: '100%', height: '100%' }}
           />
@@ -114,7 +116,7 @@ const Home = () => {
         <div className="w-[100px] h-[100px] flex items-center justify-center">
           <lord-icon
             src="https://cdn.lordicon.com/gqzfzudq.json" // Clock/Time
-            trigger="hover"
+            trigger="loop"
             colors="primary:#fbbf24,secondary:#ffffff"
             style={{ width: '100%', height: '100%' }}
           />
@@ -129,7 +131,7 @@ const Home = () => {
         <div className="w-[100px] h-[100px] flex items-center justify-center">
           <lord-icon
             src="https://cdn.lordicon.com/egiwmiit.json" // Checkmark/Shield
-            trigger="hover"
+            trigger="loop"
             colors="primary:#fbbf24,secondary:#ffffff"
             style={{ width: '100%', height: '100%' }}
           />
@@ -144,7 +146,7 @@ const Home = () => {
         <div className="w-[100px] h-[100px] flex items-center justify-center">
           <lord-icon
             src="https://cdn.lordicon.com/zpxybbhl.json" // Communication
-            trigger="hover"
+            trigger="loop"
             colors="primary:#fbbf24,secondary:#ffffff"
             style={{ width: '100%', height: '100%' }}
           />
@@ -241,10 +243,37 @@ const Home = () => {
 
       {/* Features Section with Interactive Globe */}
       <section className="py-20 bg-gray-900 relative overflow-hidden">
+        {/* Floating Question Marks - HTML/CSS */}
+        <div className="absolute inset-0 pointer-events-none z-5">
+          {/* Question Mark 1 */}
+          <div className="absolute top-[10%] left-[5%] text-yellow-400 text-4xl md:text-6xl opacity-30 animate-float" style={{ animationDelay: '0s' }}>?</div>
+
+          {/* Question Mark 2 */}
+          <div className="absolute top-[25%] left-[15%] text-purple-500 text-3xl md:text-5xl opacity-25 animate-float-slow" style={{ animationDelay: '1s' }}>?</div>
+
+          {/* Question Mark 3 */}
+          <div className="absolute top-[40%] left-[8%] text-white text-2xl md:text-4xl opacity-20 animate-float" style={{ animationDelay: '2s' }}>?</div>
+
+          {/* Question Mark 4 */}
+          <div className="absolute top-[55%] left-[12%] text-yellow-400 text-5xl md:text-7xl opacity-35 animate-float-slow" style={{ animationDelay: '0.5s' }}>?</div>
+
+          {/* Question Mark 5 */}
+          <div className="absolute top-[70%] left-[6%] text-purple-400 text-3xl md:text-5xl opacity-28 animate-float" style={{ animationDelay: '1.5s' }}>?</div>
+
+          {/* Question Mark 6 */}
+          <div className="absolute top-[85%] left-[10%] text-indigo-400 text-4xl md:text-6xl opacity-25 animate-float-slow" style={{ animationDelay: '2.5s' }}>?</div>
+
+          {/* Question Mark 7 */}
+          <div className="absolute top-[15%] left-[20%] text-yellow-300 text-2xl md:text-4xl opacity-22 animate-float" style={{ animationDelay: '3s' }}>?</div>
+
+          {/* Question Mark 8 */}
+          <div className="absolute top-[60%] left-[18%] text-purple-300 text-6xl md:text-8xl opacity-18 animate-float-slow" style={{ animationDelay: '0.8s' }}>?</div>
+        </div>
+
         <Globe onHubChange={handleHubChange} />
 
         {/* 3D Floating Title */}
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full h-[250px] md:top-1/2 md:-translate-y-1/2 md:left-4 md:translate-x-0 md:w-[600px] md:h-[400px] pointer-events-none z-20 transition-all duration-500">
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full h-[250px] xl:top-1/2 xl:-translate-y-1/2 xl:left-4 xl:translate-x-0 xl:w-[600px] xl:h-[400px] pointer-events-none z-20 transition-all duration-500">
           <Canvas camera={{ position: [0, 0, 5], fov: 45 }} gl={{ alpha: true, antialias: true }}>
             <ambientLight intensity={0.8} />
             <pointLight position={[5, 5, 5]} intensity={1} />
@@ -254,7 +283,7 @@ const Home = () => {
           </Canvas>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10 pt-[200px] md:pt-0">
+        <div className="container mx-auto px-4 relative z-10 pt-[250px] xl:pt-0">
           <div className="relative h-[400px] flex items-center justify-center">
             {features.map((feature, index) => (
               <div
@@ -307,22 +336,22 @@ const Home = () => {
               <img
                 src="https://www.vectorlogo.zone/logos/google/google-ar21.svg"
                 alt="Google logo"
-                className="h-8 w-auto opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110"
+                className="h-8 w-auto opacity-100 transition-all duration-300 transform group-hover:scale-110"
               />
             </div>
             <div className="flex flex-col items-center justify-center p-6 bg-gray-900/30 rounded-xl hover:bg-gray-800 transition-all duration-300 group border border-transparent hover:border-gray-700">
               <img
                 src="https://www.vectorlogo.zone/logos/microsoft/microsoft-ar21.svg"
                 alt="Microsoft logo"
-                className="h-8 w-auto opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110"
+                className="h-8 w-auto opacity-100 transition-all duration-300 transform group-hover:scale-110"
               />
             </div>
             <div className="flex flex-col items-center justify-center p-6 bg-gray-900/30 rounded-xl hover:bg-gray-800 transition-all duration-300 group border border-transparent hover:border-gray-700">
               <img
                 src="https://www.vectorlogo.zone/logos/amazon/amazon-ar21.svg"
                 alt="Amazon logo"
-                className="h-8 w-auto opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110"
-                style={{ filter: 'brightness(10) grayscale(100%)', opacity: 0.5 }} // Amazon logo is dark, force white
+                className="h-8 w-auto opacity-100 transition-all duration-300 transform group-hover:scale-110"
+                style={{ filter: 'brightness(10)' }} // Amazon logo is dark, force white text but keep arrow visible if possible
               />
             </div>
             <div className="flex flex-col items-center justify-center p-6 bg-gray-900/30 rounded-xl hover:bg-gray-800 transition-all duration-300 group border border-transparent hover:border-gray-700">
@@ -330,7 +359,7 @@ const Home = () => {
                 <img
                   src="https://brandlogos.net/wp-content/uploads/2021/10/meta-logo-512x512.png"
                   alt="Meta logo"
-                  className="h-8 w-auto opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110 invert"
+                  className="h-8 w-auto opacity-100 transition-all duration-300 transform group-hover:scale-110"
                 />
               </div>
             </div>
@@ -339,7 +368,7 @@ const Home = () => {
                 <img
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Apple_logo_white.svg/505px-Apple_logo_white.svg.png"
                   alt="Apple logo"
-                  className="h-8 w-auto opacity-50 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110"
+                  className="h-8 w-auto opacity-100 transition-all duration-300 transform group-hover:scale-110"
                 />
               </div>
             </div>
@@ -347,7 +376,7 @@ const Home = () => {
               <img
                 src="https://www.vectorlogo.zone/logos/netflix/netflix-ar21.svg"
                 alt="Netflix logo"
-                className="h-8 w-auto opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110"
+                className="h-8 w-auto opacity-100 transition-all duration-300 transform group-hover:scale-110"
               />
             </div>
           </div>
@@ -367,19 +396,32 @@ const Home = () => {
                 className="group bg-black/50 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer border border-gray-800 hover:border-yellow-400/50"
               >
                 <div className="w-16 h-16 mx-auto mb-4">
-                  <lord-icon
-                    src={
-                      category.name === 'Web Development' ? "https://cdn.lordicon.com/qhgmphtg.json" : // Computer
-                        category.name === 'Graphic Design' ? "https://cdn.lordicon.com/wjyqkiew.json" : // Palette/Design
-                          category.name === 'Content Writing' ? "https://cdn.lordicon.com/wloilxuq.json" : // Pen/Doc
-                            category.name === 'Digital Marketing' ? "https://cdn.lordicon.com/ofwpzftr.json" : // Megaphone
-                              category.name === 'Video & Animation' ? "https://cdn.lordicon.com/tdxypxgp.json" : // Video Camera
-                                "https://cdn.lordicon.com/fhtaantg.json" // Mobile Phone
-                    }
-                    trigger="hover"
-                    colors="primary:#fbbf24,secondary:#ffffff"
-                    style={{ width: '100%', height: '100%' }}
-                  />
+                  {category.name === 'Mobile Development' ? (
+                    <img
+                      src={cellphoneGif}
+                      alt="Mobile Development"
+                      className="w-full h-full object-contain"
+                    />
+                  ) : category.name === 'Graphic Design' ? (
+                    <img
+                      src={monitorGif}
+                      alt="Graphic Design"
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <lord-icon
+                      src={
+                        category.name === 'Web Development' ? "https://cdn.lordicon.com/qhgmphtg.json" : // Computer
+                          category.name === 'Graphic Design' ? "https://cdn.lordicon.com/wjyqkiew.json" : // Palette/Design
+                            category.name === 'Content Writing' ? "https://cdn.lordicon.com/wloilxuq.json" : // Pen/Doc
+                              category.name === 'Digital Marketing' ? "https://cdn.lordicon.com/gqdnbnwt.json" : // Target/Strategy
+                                "https://cdn.lordicon.com/tdxypxgp.json" // Video Camera (Video & Animation)
+                      }
+                      trigger="loop"
+                      colors="primary:#fbbf24,secondary:#ffffff"
+                      style={{ width: '100%', height: '100%' }}
+                    />
+                  )}
                 </div>
                 <h3 className="text-lg font-semibold mb-2 text-yellow-400 text-center">
                   {category.name}

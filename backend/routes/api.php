@@ -12,6 +12,8 @@ use App\Models\Message;
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
 Route::get('/freelancers', [FreelancerController::class, 'index']);
 
 // Public job routes
