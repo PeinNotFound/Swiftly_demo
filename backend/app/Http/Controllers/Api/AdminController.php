@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use App\Models\VerificationRequest;
 
 class AdminController extends Controller
 {
@@ -127,7 +128,7 @@ class AdminController extends Controller
     public function deleteUser($id)
     {
         $user = User::findOrFail($id);
-        
+
         // Prevent deleting the last admin
         if ($user->role === 'admin' && User::where('role', 'admin')->count() <= 1) {
             return response()->json([
@@ -151,6 +152,9 @@ class AdminController extends Controller
             'total_users' => User::count(),
             'total_freelancers' => User::where('role', 'freelancer')->count(),
             'total_clients' => User::whereNotIn('role', ['admin', 'freelancer'])->count(),
+            'total_jobs' => \App\Models\Job::count(),
+            'active_jobs' => \App\Models\Job::whereIn('status', ['open', 'in_progress'])->count(),
+            'pending_verifications' => VerificationRequest::where('status', 'pending')->count(),
         ];
 
         return response()->json($stats);
@@ -163,8 +167,88 @@ class AdminController extends Controller
     {
         $stats = [
             'total_freelancers' => User::where('role', 'freelancer')->count(),
+            'pending_verifications' => VerificationRequest::where('status', 'pending')->count(),
         ];
 
         return response()->json($stats);
     }
-} 
+
+    /**
+     * Get verification requests
+     */
+    public function getVerificationRequests()
+    {
+        $requests = VerificationRequest::with(['freelancer.user'])
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($req) {
+                return [
+                    'id' => $req->id,
+                    'freelancer_name' => $req->freelancer->user->name ?? 'Unknown',
+                    'freelancer_email' => $req->freelancer->user->email ?? 'Unknown',
+                    'freelancer_title' => $req->freelancer->user->title ?? 'No title',
+                    'skills' => is_string($req->freelancer->skills) ? json_decode($req->freelancer->skills, true) : ($req->freelancer->skills ?? []),
+                    'freelancer_level' => $req->freelancer->freelancer_level ?? 'beginner',
+                    'phone' => $req->freelancer->phone ?? 'Not provided',
+                    'id_document_url' => asset('storage/' . $req->id_document_path),
+                    'certificate_urls' => collect($req->certificate_paths)->map(fn($p) => asset('storage/' . $p)),
+                    'project_links' => $req->project_links,
+                    'submitted_at' => $req->created_at,
+                ];
+            });
+
+        return response()->json(['requests' => $requests]);
+    }
+
+    public function approveVerification($id)
+    {
+        $request = VerificationRequest::findOrFail($id);
+        $request->update(['status' => 'approved']);
+
+        $request->freelancer->update(['is_verified' => true]);
+
+        return response()->json(['message' => 'Verification request approved']);
+    }
+
+    public function rejectVerification(Request $request, $id)
+    {
+        $req = VerificationRequest::findOrFail($id);
+        $req->update([
+            'status' => 'rejected',
+            'admin_notes' => $request->reason
+        ]);
+
+        if ($request->block_user) {
+            $user = clone $req->freelancer->user; // Reference the user
+            $user->update(['is_active' => false]);
+            $req->freelancer->update(['is_suspended' => true]);
+        }
+
+        return response()->json(['message' => 'Verification request rejected']);
+    }
+
+    /**
+     * Get all jobs (Admin)
+     */
+    public function getJobs()
+    {
+        $jobs = \App\Models\Job::with('client:id,name,email,company')->orderBy('created_at', 'desc')->get();
+        return response()->json(['jobs' => $jobs]);
+    }
+
+    public function deleteJob($id)
+    {
+        $job = \App\Models\Job::findOrFail($id);
+        $job->delete();
+        return response()->json(['message' => 'Job deleted successfully']);
+    }
+
+    public function updateJobStatus(Request $request, $id)
+    {
+        $request->validate(['status' => 'required|string']);
+        $job = \App\Models\Job::findOrFail($id);
+        $job->update(['status' => $request->status]);
+        return response()->json(['message' => 'Job status updated successfully']);
+    }
+}

@@ -39,17 +39,32 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/users/{id}', [AdminController::class, 'deleteUser']);
         Route::get('/stats', [AdminController::class, 'getStats']);
 
+        // Job Management
+        Route::get('/jobs', [AdminController::class, 'getJobs']);
+        Route::delete('/jobs/{id}', [AdminController::class, 'deleteJob']);
+        Route::patch('/jobs/{id}/status', [AdminController::class, 'updateJobStatus']);
+
         // Freelancer Management
         Route::get('/freelancers', [AdminController::class, 'getFreelancers']);
         Route::put('/freelancers/{id}/verify', [AdminController::class, 'verifyFreelancer']);
         Route::put('/freelancers/{id}/suspend', [AdminController::class, 'suspendFreelancer']);
         Route::get('/freelancers/stats', [AdminController::class, 'getFreelancerStats']);
+
+        // Verification Requests
+        Route::get('/verification-requests', [AdminController::class, 'getVerificationRequests']);
+        Route::post('/verification-requests/{id}/approve', [AdminController::class, 'approveVerification']);
+        Route::post('/verification-requests/{id}/reject', [AdminController::class, 'rejectVerification']);
     });
 
     // Freelancer routes
     Route::middleware('role:freelancer')->group(function () {
         Route::get('/freelancers/profile', [ProfileController::class, 'getFreelancerProfile']);
         Route::put('/freelancers/profile', [ProfileController::class, 'updateFreelancerProfile']);
+
+        // Verification & Resume
+        Route::post('/freelancers/resume/parse', [FreelancerController::class, 'parseResume']);
+        Route::post('/freelancers/verification/request', [FreelancerController::class, 'requestVerification']);
+        Route::post('/freelancers/onboarding/complete', [FreelancerController::class, 'completeOnboarding']);
     });
 
     // Client routes

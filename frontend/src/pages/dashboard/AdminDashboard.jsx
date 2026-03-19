@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { FaUsers, FaChartBar, FaBriefcase, FaMoneyBillWave, FaUserTie, FaUserCog, FaBell, FaCog, FaQuestionCircle } from 'react-icons/fa';
+import { FaUsers, FaChartBar, FaBriefcase, FaMoneyBillWave, FaUserTie, FaUserCog, FaBell, FaCog, FaQuestionCircle, FaCheck } from 'react-icons/fa';
 import UserManagement from '../../components/dashboard/UserManagement';
 import JobManagement from '../../components/dashboard/JobManagement';
 import FreelancerManagement from '../../components/dashboard/FreelancerManagement';
+import VerificationRequests from '../../components/dashboard/VerificationRequests';
 import { adminService } from '../../services/adminService';
 import { toast } from 'react-toastify';
 
@@ -79,9 +80,8 @@ const AdminDashboard = () => {
                 <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                     <Link
                         to="/dashboard/admin/users"
-                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${
-                            isActivePath('/dashboard/admin/users') ? 'ring-2 ring-yellow-400' : ''
-                        }`}
+                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${isActivePath('/dashboard/admin/users') ? 'ring-2 ring-yellow-400' : ''
+                            }`}
                     >
                         <div className="p-5">
                             <div className="flex items-center">
@@ -104,9 +104,8 @@ const AdminDashboard = () => {
 
                     <Link
                         to="/dashboard/admin/freelancers"
-                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${
-                            isActivePath('/dashboard/admin/freelancers') ? 'ring-2 ring-yellow-400' : ''
-                        }`}
+                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${isActivePath('/dashboard/admin/freelancers') ? 'ring-2 ring-yellow-400' : ''
+                            }`}
                     >
                         <div className="p-5">
                             <div className="flex items-center">
@@ -129,9 +128,8 @@ const AdminDashboard = () => {
 
                     <Link
                         to="/dashboard/admin/jobs"
-                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${
-                            isActivePath('/dashboard/admin/jobs') ? 'ring-2 ring-yellow-400' : ''
-                        }`}
+                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${isActivePath('/dashboard/admin/jobs') ? 'ring-2 ring-yellow-400' : ''
+                            }`}
                     >
                         <div className="p-5">
                             <div className="flex items-center">
@@ -152,6 +150,17 @@ const AdminDashboard = () => {
                         </div>
                     </Link>
 
+                </div>
+
+                {/* Quick Access Cards */}
+                <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    {/* ... (previous cards) ... */}
+                    {/* I will append the NEW card logic carefully by finding the END of the previous card div and appending after it, OR by replacing the entire grid container content if easier, but replacing partially is safer if I can find a unique anchor. The last card was "Total Revenue". */}
+
+                    {/* Actually, the file content shows "Total Revenue" card ends at line 173. The grid closes at 174. */}
+
+                    {/* Let's try to match the "Total Revenue" card and append after it. */}
+
                     <div className="bg-white overflow-hidden shadow rounded-lg">
                         <div className="p-5">
                             <div className="flex items-center">
@@ -171,6 +180,30 @@ const AdminDashboard = () => {
                             </div>
                         </div>
                     </div>
+
+                    <Link
+                        to="/dashboard/admin/verifications"
+                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${isActivePath('/dashboard/admin/verifications') ? 'ring-2 ring-yellow-400' : ''
+                            }`}
+                    >
+                        <div className="p-5">
+                            <div className="flex items-center">
+                                <div className="flex-shrink-0">
+                                    <FaCheck className="h-6 w-6 text-yellow-400" />
+                                </div>
+                                <div className="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt className="text-sm font-medium text-gray-500 truncate">
+                                            Pending Verifs
+                                        </dt>
+                                        <dd className="text-lg font-semibold text-gray-900">
+                                            {stats.pending_verifications}
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </Link>
                 </div>
 
                 {/* Main Content */}
@@ -178,7 +211,10 @@ const AdminDashboard = () => {
                     <Routes>
                         <Route path="/users" element={<UserManagement />} />
                         <Route path="/jobs" element={<JobManagement />} />
+                        <Route path="/users" element={<UserManagement />} />
+                        <Route path="/jobs" element={<JobManagement />} />
                         <Route path="/freelancers" element={<FreelancerManagement />} />
+                        <Route path="/verifications" element={<VerificationRequests />} />
                         <Route
                             path="/"
                             element={

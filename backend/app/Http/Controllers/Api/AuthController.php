@@ -128,6 +128,11 @@ class AuthController extends Controller
             $userData['profile_picture'] = asset('storage/profile_pictures/' . $user->profile_picture);
         }
 
+        if ($user->role === 'freelancer') {
+            $user->load('freelancer');
+            $userData['freelancer'] = $user->freelancer;
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Login successful',
@@ -237,8 +242,14 @@ class AuthController extends Controller
         $userData = $user->toArray();
 
         // Format user data
+        // Format user data
         if ($user->profile_picture) {
             $userData['profile_picture'] = asset('storage/profile_pictures/' . $user->profile_picture);
+        }
+
+        if ($user->role === 'freelancer') {
+            $user->load('freelancer');
+            $userData['freelancer'] = $user->freelancer;
         }
 
         return response()->json([

@@ -26,6 +26,8 @@ import FreelancerDashboard from './pages/dashboard/FreelancerDashboard';
 import ClientDashboard from './pages/dashboard/ClientDashboard';
 import AdminDashboard from './pages/dashboard/AdminDashboard';
 import PostJob from './pages/PostJob';
+import FreelancerSettings from './pages/freelancer/FreelancerSettings';
+import FreelancerOnboarding from './pages/freelancer/FreelancerOnboarding';
 
 // ScrollToTop component
 function ScrollToTop() {
@@ -47,6 +49,16 @@ const PrivateRoute = ({ children, roles }) => {
 
   if (roles && !roles.includes(user?.role)) {
     return <Navigate to="/" />;
+  }
+
+  return children;
+};
+
+const OnboardingGuard = ({ children }) => {
+  const { user } = useAuth();
+
+  if (user?.role === 'freelancer' && !user?.freelancer?.is_onboarded) {
+    return <Navigate to="/freelancer/onboarding" replace />;
   }
 
   return children;
@@ -108,7 +120,29 @@ const App = () => {
                 path="/dashboard/freelancer"
                 element={
                   <PrivateRoute roles={['freelancer']}>
-                    <FreelancerDashboard />
+                    <OnboardingGuard>
+                      <FreelancerDashboard />
+                    </OnboardingGuard>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/freelancer/onboarding"
+                element={
+                  <PrivateRoute roles={['freelancer']}>
+                    <FreelancerOnboarding />
+                  </PrivateRoute>
+                }
+              />
+
+              {/* Flattened routes needing protection */}
+              <Route
+                path="/freelancer/settings"
+                element={
+                  <PrivateRoute roles={['freelancer']}>
+                    <OnboardingGuard>
+                      <FreelancerSettings />
+                    </OnboardingGuard>
                   </PrivateRoute>
                 }
               />

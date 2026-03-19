@@ -7,6 +7,9 @@ use App\Models\Freelancer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\VerificationRequest;
+use App\Services\ResumeParserService;
+use Illuminate\Support\Facades\Storage;
 
 class FreelancerController extends Controller
 {
@@ -23,7 +26,7 @@ class FreelancerController extends Controller
                 if (is_string($skills)) {
                     $skills = json_decode($skills, true) ?? [];
                 }
-                
+
                 return [
                     'id' => $user->id,
                     'name' => $user->name,
@@ -80,4 +83,92 @@ class FreelancerController extends Controller
         $freelancer->update(['is_suspended' => true]);
         return response()->json(['message' => 'Freelancer suspended successfully']);
     }
-} 
+
+    public function parseResume(Request $request, ResumeParserService $parser)
+    {
+        $request->validate(['resume' => 'required|mimes:pdf|max:10240']);
+
+        try {
+            $data = $parser->parse($request->file('resume'));
+            return response()->json(['success' => true, 'data' => $data]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+    public function requestVerification(Request $request)
+    {
+        $user = Auth::user();
+
+        // Ensure user has a freelancer profile
+        if (!$user->freelancer) {
+            return response()->json(['message' => 'Freelancer profile not found'], 404);
+        }
+
+        $request->validate([
+            'id_document' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'certificates' => 'nullable|array',
+            'certificates.*' => 'file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'project_links' => 'nullable|array' // Expecting JSON array or just array from form-data if properly indexed
+        ]);
+
+        $freelancer = $user->freelancer;
+
+        // Check if pending request exists
+        if ($freelancer->verificationRequest && $freelancer->verificationRequest->status === 'pending') {
+            return response()->json(['message' => 'You already have a pending verification request'], 400);
+        }
+
+        // Upload ID
+        $idPath = $request->file('id_document')->store('verification_documents', 'public');
+
+        // Upload Certificates
+        $certPaths = [];
+        if ($request->hasFile('certificates')) {
+            foreach ($request->file('certificates') as $cert) {
+                $certPaths[] = $cert->store('verification_documents', 'public');
+            }
+        }
+
+        // Handle project_links (it might come as a string if using FormData in a simple way, but let's assume array or handle JSON decoding)
+        $projectLinks = $request->project_links;
+        if (is_string($projectLinks)) {
+            $projectLinks = json_decode($projectLinks, true) ?? [];
+        }
+
+        VerificationRequest::updateOrCreate(
+            ['freelancer_id' => $freelancer->id],
+            [
+                'id_document_path' => $idPath,
+                'certificate_paths' => $certPaths,
+                'project_links' => $projectLinks,
+                'status' => 'pending',
+                'admin_notes' => null
+            ]
+        );
+
+        return response()->json(['success' => true, 'message' => 'Verification request submitted successfully']);
+    }
+
+    public function completeOnboarding(Request $request)
+    {
+        $user = Auth::user();
+        $freelancer = $user->freelancer;
+
+        if (!$freelancer) {
+            return response()->json(['message' => 'Freelancer profile not found'], 404);
+        }
+
+        // Update profile fields if provided
+        $freelancer->update([
+            'is_onboarded' => true,
+            'phone' => $request->input('phone'),
+            'freelancer_level' => $request->input('freelancer_level', 'beginner'),
+            'skills' => $request->input('skills', []), // Expecting array
+            'education' => $request->input('education', []),
+            'experience' => $request->input('experience', []),
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Onboarding completed']);
+    }
+}

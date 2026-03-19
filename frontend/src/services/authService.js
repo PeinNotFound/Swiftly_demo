@@ -151,7 +151,9 @@ const authService = {
             return {
                 message: error.response.data.message || 'An error occurred',
                 errors: error.response.data.errors,
-                status: error.response.status
+                status: error.response.status,
+                data: error.response.data.data,
+                error_code: error.response.data.error_code
             };
         } else if (error.request) {
             console.error('Error request:', error.request);

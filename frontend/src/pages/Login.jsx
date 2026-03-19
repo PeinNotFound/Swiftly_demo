@@ -43,10 +43,10 @@ const Login = () => {
       }
     } catch (error) {
       // Try to get the backend message, fallback to generic
-      let backendMsg = error.response?.data?.message;
+      let backendMsg = error.message;
       // If there are validation errors, append them
-      if (error.response?.data?.errors) {
-        const errors = error.response.data.errors;
+      if (error.errors) {
+        const errors = error.errors;
         const errorDetails = Object.keys(errors)
           .map(field => `${field}: ${errors[field].join(', ')}`)
           .join(' | ');
@@ -55,7 +55,7 @@ const Login = () => {
       setError(backendMsg || error.message || 'An error occurred during login');
 
       // Check for email verification error
-      if (error.response?.data?.error_code === 'EMAIL_NOT_VERIFIED') {
+      if (error.error_code === 'EMAIL_NOT_VERIFIED') {
         setEmailForOtp(formData.email);
         setShowOtp(true);
         setError(''); // Clear error to show OTP screen cleanly

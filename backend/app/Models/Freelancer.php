@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Freelancer extends Model
 {
@@ -14,12 +15,16 @@ class Freelancer extends Model
         'is_suspended',
         'skills',
         'hourly_rate',
+        'freelancer_level',
         'availability',
+        'phone',
         'education',
+        'experience',
         'languages',
         'completed_projects_count',
         'average_rating',
-        'portfolio'
+        'portfolio',
+        'is_onboarded'
     ];
 
     protected $casts = [
@@ -30,14 +35,21 @@ class Freelancer extends Model
         'hourly_rate' => 'float',
         'availability' => 'array',
         'education' => 'array',
+        'experience' => 'array',
         'languages' => 'array',
         'portfolio' => 'array',
         'completed_projects_count' => 'integer',
-        'average_rating' => 'float'
+        'average_rating' => 'float',
+        'is_onboarded' => 'boolean'
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-} 
+
+    public function verificationRequest(): HasOne
+    {
+        return $this->hasOne(VerificationRequest::class);
+    }
+}

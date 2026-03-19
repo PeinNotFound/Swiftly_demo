@@ -105,6 +105,42 @@ export const adminService = {
         }
     },
 
+    // Job Management
+    getJobs: async () => {
+        try {
+            const response = await axios.get(`${API_URL}/api/admin/jobs`, {
+                headers: getAuthHeader()
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    deleteJob: async (jobId) => {
+        try {
+            const response = await axios.delete(`${API_URL}/api/admin/jobs/${jobId}`, {
+                headers: getAuthHeader()
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    updateJobStatus: async (jobId, newStatus) => {
+        try {
+            const response = await axios.patch(
+                `${API_URL}/api/admin/jobs/${jobId}/status`,
+                { status: newStatus },
+                { headers: getAuthHeader() }
+            );
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
     // Statistics
     getStats: async () => {
         try {
