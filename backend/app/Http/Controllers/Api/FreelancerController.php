@@ -77,11 +77,46 @@ class FreelancerController extends Controller
         return response()->json(['message' => 'Freelancer verified successfully']);
     }
 
-    public function suspend($id)
+    public function suspend(Request $request, $id)
+    {
+        $request->validate(['reason' => 'required|string']);
+        $freelancer = Freelancer::where('user_id', $id)->firstOrFail();
+        $freelancer->update([
+            'is_suspended' => true,
+            'suspension_reason' => $request->reason,
+            'appeal_status' => 'none',
+            'appeal_message' => null
+        ]);
+        return response()->json(['message' => 'Freelancer suspended successfully']);
+    }
+
+    public function unsuspend($id)
     {
         $freelancer = Freelancer::where('user_id', $id)->firstOrFail();
-        $freelancer->update(['is_suspended' => true]);
-        return response()->json(['message' => 'Freelancer suspended successfully']);
+        $freelancer->update([
+            'is_suspended' => false,
+            'suspension_reason' => null,
+            'appeal_status' => 'approved',
+            'appeal_message' => null
+        ]);
+        return response()->json(['message' => 'Freelancer unsuspended successfully']);
+    }
+
+    public function submitAppeal(Request $request)
+    {
+        $request->validate(['appeal_message' => 'required|string']);
+        $freelancer = Auth::user()->freelancer;
+
+        if (!$freelancer || !$freelancer->is_suspended) {
+            return response()->json(['message' => 'You are not suspended'], 400);
+        }
+
+        $freelancer->update([
+            'appeal_message' => $request->appeal_message,
+            'appeal_status' => 'pending'
+        ]);
+
+        return response()->json(['message' => 'Appeal submitted successfully']);
     }
 
     public function parseResume(Request $request, ResumeParserService $parser)

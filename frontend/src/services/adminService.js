@@ -44,7 +44,7 @@ export const adminService = {
     // Freelancer Management
     getFreelancers: async () => {
         try {
-            const response = await axios.get(`${API_URL}/api/freelancers`, {
+            const response = await axios.get(`${API_URL}/api/admin/freelancers`, {
                 headers: getAuthHeader()
             });
             return response.data;
@@ -92,10 +92,23 @@ export const adminService = {
         }
     },
 
-    suspendFreelancer: async (freelancerId) => {
+    suspendFreelancer: async (freelancerId, reason) => {
         try {
             const response = await axios.post(
                 `${API_URL}/api/freelancers/${freelancerId}/suspend`,
+                { reason },
+                { headers: getAuthHeader() }
+            );
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    unsuspendFreelancer: async (freelancerId) => {
+        try {
+            const response = await axios.post(
+                `${API_URL}/api/freelancers/${freelancerId}/unsuspend`,
                 {},
                 { headers: getAuthHeader() }
             );

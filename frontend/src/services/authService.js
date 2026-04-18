@@ -153,7 +153,8 @@ const authService = {
                 errors: error.response.data.errors,
                 status: error.response.status,
                 data: error.response.data.data,
-                error_code: error.response.data.error_code
+                error_code: error.response.data.error_code,
+                ...error.response.data
             };
         } else if (error.request) {
             console.error('Error request:', error.request);

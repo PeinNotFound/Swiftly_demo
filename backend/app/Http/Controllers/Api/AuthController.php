@@ -88,11 +88,23 @@ class AuthController extends Controller
             ]);
         }
 
-        // Block suspended freelancers
-        if ($user->role === 'freelancer' && $user->freelancer && $user->freelancer->is_suspended) {
+        // Hard ban
+        if (isset($user->is_active) && $user->is_active === 0) {
             throw ValidationException::withMessages([
-                'email' => ['Your account has been suspended. Please contact support for more information.'],
+                'email' => ['Your account has been permanently banned from the platform.'],
             ]);
+        }
+
+        // Block suspended freelancers but allow enough to lodge an appeal
+        if ($user->role === 'freelancer' && $user->freelancer && $user->freelancer->is_suspended) {
+            return response()->json([
+                'success' => false,
+                'is_suspended' => true,
+                'suspension_reason' => $user->freelancer->suspension_reason,
+                'appeal_status' => $user->freelancer->appeal_status,
+                'token' => $user->createToken('auth_token')->plainTextToken,
+                'message' => 'Your account has been suspended.'
+            ], 403);
         }
 
         // Check Email Verification

@@ -24,7 +24,10 @@ class Freelancer extends Model
         'completed_projects_count',
         'average_rating',
         'portfolio',
-        'is_onboarded'
+        'is_onboarded',
+        'suspension_reason',
+        'appeal_message',
+        'appeal_status'
     ];
 
     protected $casts = [

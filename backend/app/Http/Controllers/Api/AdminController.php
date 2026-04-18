@@ -36,26 +36,34 @@ class AdminController extends Controller
     public function getFreelancers()
     {
         $freelancers = User::where('role', 'freelancer')
+            ->with('freelancer')
             ->get()
-            ->map(function ($freelancer) {
+            ->map(function ($user) {
+                $fl = $user->freelancer;
                 return [
-                    'id' => $freelancer->id,
-                    'name' => $freelancer->name,
-                    'email' => $freelancer->email,
-                    'hourly_rate' => $freelancer->hourly_rate,
-                    'title' => $freelancer->title,
-                    'bio' => $freelancer->bio,
-                    'location' => $freelancer->location,
-                    'experience_years' => $freelancer->experience_years,
-                    'education' => $freelancer->education,
-                    'languages' => $freelancer->languages,
-                    'availability' => $freelancer->availability,
-                    'completed_projects' => $freelancer->completed_projects_count ?? 0,
-                    'rating' => $freelancer->average_rating ?? 0,
-                    'created_at' => $freelancer->created_at,
-                    'profile_picture' => $freelancer->profile_picture_url,
-                    'skills' => $freelancer->skills ?? [],
-                    'portfolio' => $freelancer->portfolio ?? [],
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'is_approved' => $fl ? $fl->is_approved : false,
+                    'is_verified' => $fl ? $fl->is_verified : false,
+                    'is_suspended' => $fl ? $fl->is_suspended : false,
+                    'hourly_rate' => $fl ? $fl->hourly_rate : null,
+                    'title' => $fl ? $fl->title : null,
+                    'bio' => $fl ? $fl->bio : null,
+                    'location' => $fl ? $fl->location : null,
+                    'experience_years' => $fl ? $fl->experience_years : null,
+                    'education' => $fl ? $fl->education : [],
+                    'languages' => $fl ? $fl->languages : [],
+                    'availability' => $fl ? $fl->availability : null,
+                    'completed_projects' => $fl ? $fl->completed_projects_count : 0,
+                    'rating' => $fl ? $fl->average_rating : 0,
+                    'created_at' => $user->created_at,
+                    'profile_picture' => $user->profile_picture_url,
+                    'skills' => $fl && is_string($fl->skills) ? json_decode($fl->skills, true) : ($fl->skills ?? []),
+                    'portfolio' => $fl ? $fl->portfolio : [],
+                    'suspension_reason' => $fl ? $fl->suspension_reason : null,
+                    'appeal_message' => $fl ? $fl->appeal_message : null,
+                    'appeal_status' => $fl ? $fl->appeal_status : 'none',
                 ];
             });
 
@@ -206,7 +214,10 @@ class AdminController extends Controller
         $request = VerificationRequest::findOrFail($id);
         $request->update(['status' => 'approved']);
 
-        $request->freelancer->update(['is_verified' => true]);
+        $request->freelancer->update([
+            'is_verified' => true,
+            'is_approved' => true
+        ]);
 
         return response()->json(['message' => 'Verification request approved']);
     }

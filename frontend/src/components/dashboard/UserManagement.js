@@ -90,7 +90,7 @@ const UserManagement = () => {
             key={role}
             onClick={() => setRoleFilter(role)}
             className={`px-4 py-2 rounded-lg border transition-all duration-200 ${
-              roleFilter === role ? 'bg-yellow-400 text-black border-yellow-400' : 'bg-white text-gray-700 border-gray-200 hover:bg-yellow-100'
+              roleFilter === role ? 'bg-yellow-400 text-black border-yellow-400' : 'bg-gray-800/50 text-gray-300 border-gray-700 hover:bg-yellow-500/20'
             }`}
           >
             {role.charAt(0).toUpperCase() + role.slice(1)}
@@ -101,68 +101,68 @@ const UserManagement = () => {
       <div className="mb-6">
         <div className="flex items-center gap-4">
           <div className="flex-1 relative">
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
             <input
               type="text"
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-20 transition-all duration-300"
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-20 transition-all duration-300 placeholder-gray-500"
             />
           </div>
-          <button className="px-4 py-2 text-gray-600 hover:text-gray-800 flex items-center gap-2">
+          <button className="px-4 py-2 text-gray-400 hover:text-yellow-400 flex items-center gap-2 transition-colors">
             <FaFilter /> Filter
           </button>
         </div>
       </div>
 
       {/* Users Table */}
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-xl shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-800">
+            <thead className="bg-gray-800/50">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Join Date</th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">User</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Role</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Join Date</th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-transparent divide-y divide-gray-800">
               {filteredUsers.map(user => (
-                <tr key={user.id}>
+                <tr key={user.id} className="hover:bg-gray-800/30 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       {user.profile_picture ? (
                         <img
                           src={user.profile_picture}
                           alt={user.name}
-                          className="h-10 w-10 rounded-full mr-3"
+                          className="h-10 w-10 rounded-full mr-3 border border-gray-700"
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded-full mr-3 bg-yellow-400 flex items-center justify-center text-black font-semibold">
+                        <div className="h-10 w-10 rounded-full mr-3 bg-yellow-400 flex items-center justify-center text-black font-bold">
                           {user.name.charAt(0).toUpperCase()}
                         </div>
                       )}
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
+                        <div className="text-sm font-bold text-white">{user.name}</div>
+                        <div className="text-sm text-gray-400">{user.email}</div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 
-                      user.role === 'freelancer' ? 'bg-blue-100 text-blue-800' : 
-                      'bg-green-100 text-green-800'
+                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${
+                      user.role === 'admin' ? 'bg-purple-500/10 border-purple-500/20 text-purple-400' : 
+                      user.role === 'freelancer' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 
+                      'bg-green-500/10 border-green-500/20 text-green-400'
                     }`}>
                       {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border ${
+                      user.is_active ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-400'
                     }`}>
                       {user.is_active ? 'Active' : 'Inactive'}
                     </span>
@@ -174,15 +174,15 @@ const UserManagement = () => {
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => handleEdit(user)}
-                        className="text-yellow-600 hover:text-yellow-900 transition-colors duration-200"
+                        className="text-yellow-500 hover:text-yellow-400 transition-colors duration-200"
                       >
-                        <FaEdit />
+                        <FaEdit className="w-5 h-5" />
                       </button>
                       <button
                         onClick={() => handleDelete(user.id)}
-                        className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                        className="text-red-500 hover:text-red-400 transition-colors duration-200"
                       >
-                        <FaTrash />
+                        <FaTrash className="w-5 h-5" />
                       </button>
                     </div>
                   </td>
@@ -195,34 +195,34 @@ const UserManagement = () => {
 
       {/* Edit Modal */}
       {editingUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-2xl w-[480px] shadow-2xl">
-            <h2 className="text-2xl font-bold mb-6">Edit User</h2>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-gray-900 border border-gray-800 p-8 rounded-2xl w-[480px] shadow-2xl">
+            <h2 className="text-2xl font-bold mb-6 text-white">Edit User</h2>
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Name</label>
                 <input
                   type="text"
                   value={editingUser.name}
                   onChange={(e) => setEditingUser({...editingUser, name: e.target.value})}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-20 transition-all duration-300"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-20 transition-all duration-300"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
                 <input
                   type="email"
                   value={editingUser.email}
                   onChange={(e) => setEditingUser({...editingUser, email: e.target.value})}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-20 transition-all duration-300"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-20 transition-all duration-300"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Role</label>
                 <select
                   value={editingUser.role}
                   onChange={(e) => setEditingUser({...editingUser, role: e.target.value})}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-20 transition-all duration-300"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-20 transition-all duration-300 [&>option]:bg-gray-900"
                 >
                   <option value="user">User</option>
                   <option value="freelancer">Freelancer</option>
@@ -230,11 +230,11 @@ const UserManagement = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <label className="block text-sm font-medium text-gray-400 mb-2">Status</label>
                 <select
                   value={editingUser.is_active ? 'active' : 'inactive'}
                   onChange={(e) => setEditingUser({...editingUser, is_active: e.target.value === 'active'})}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-20 transition-all duration-300"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/50 text-white focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-20 transition-all duration-300 [&>option]:bg-gray-900"
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
@@ -243,7 +243,7 @@ const UserManagement = () => {
               <div className="flex justify-end gap-4 mt-8">
                 <button
                   onClick={() => setEditingUser(null)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                  className="px-4 py-2 text-gray-400 hover:text-white transition-colors duration-200"
                 >
                   Cancel
                 </button>

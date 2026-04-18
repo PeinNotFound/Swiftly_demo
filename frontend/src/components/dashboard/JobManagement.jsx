@@ -77,26 +77,26 @@ const JobManagement = () => {
     }
 
     return (
-        <div className="bg-white rounded-lg shadow">
+        <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-xl shadow-lg">
             {/* Header */}
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 border-b border-gray-800">
                 <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold text-gray-900">Job Management</h2>
+                    <h2 className="text-xl font-bold text-white">Job Management</h2>
                     <div className="flex items-center gap-4">
                         <div className="relative">
-                            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                             <input
                                 type="text"
                                 placeholder="Search jobs..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                                className="pl-10 pr-4 py-2 border border-gray-700 bg-gray-800/50 text-white rounded-lg focus:border-yellow-400 focus:ring-yellow-400 placeholder-gray-500"
                             />
                         </div>
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                            className="px-4 py-2 border border-gray-700 bg-gray-800/50 text-white rounded-lg focus:border-yellow-400 focus:ring-yellow-400 [&>option]:bg-gray-900"
                         >
                             <option value="all">All Status</option>
                             <option value="open">Open</option>
@@ -110,47 +110,47 @@ const JobManagement = () => {
 
             {/* Jobs Table */}
             <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                <table className="min-w-full divide-y divide-gray-800">
+                    <thead className="bg-gray-800/50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                                 Job
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                                 Client
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                                 Status
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                                 Posted Date
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-transparent divide-y divide-gray-800">
                         {filteredJobs.map(job => (
-                            <tr key={job.id}>
+                            <tr key={job.id} className="hover:bg-gray-800/30 transition-colors">
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
                                         <div>
-                                            <div className="text-sm font-medium text-gray-900">{job.title}</div>
-                                            <div className="text-sm text-gray-500">{job.type}</div>
+                                            <div className="text-sm font-bold text-white">{job.title}</div>
+                                            <div className="text-sm text-gray-400">{job.type}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">{job.client?.name || 'N/A'}</div>
+                                    <div className="text-sm font-medium text-gray-300">{job.client?.name || 'N/A'}</div>
                                     <div className="text-sm text-gray-500">{job.client?.email || 'N/A'}</div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                        job.status === 'open' ? 'bg-green-100 text-green-800' :
-                                        job.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
-                                        job.status === 'completed' ? 'bg-gray-100 text-gray-800' :
-                                        'bg-red-100 text-red-800'
+                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full border ${
+                                        job.status === 'open' ? 'bg-green-500/10 border-green-500/20 text-green-400' :
+                                        job.status === 'in_progress' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' :
+                                        job.status === 'completed' ? 'bg-gray-500/10 border-gray-500/20 text-gray-400' :
+                                        'bg-red-500/10 border-red-500/20 text-red-400'
                                     }`}>
                                         {job.status.charAt(0).toUpperCase() + job.status.slice(1).replace('_', ' ')}
                                     </span>
@@ -159,27 +159,27 @@ const JobManagement = () => {
                                     {new Date(job.created_at).toLocaleDateString()}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-4">
                                         <button
                                             onClick={() => handleStatusChange(job.id, 'completed')}
-                                            className="text-green-600 hover:text-green-900"
+                                            className="text-green-500 hover:text-green-400 transition-colors"
                                             title="Mark as completed"
                                         >
-                                            <FaCheck />
+                                            <FaCheck className="w-4 h-4" />
                                         </button>
                                         <button
                                             onClick={() => handleStatusChange(job.id, 'cancelled')}
-                                            className="text-red-600 hover:text-red-900"
+                                            className="text-yellow-500 hover:text-yellow-400 transition-colors"
                                             title="Cancel job"
                                         >
-                                            <FaTimes />
+                                            <FaTimes className="w-4 h-4" />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(job.id)}
-                                            className="text-red-600 hover:text-red-900"
+                                            className="text-red-500 hover:text-red-400 transition-colors"
                                             title="Delete job"
                                         >
-                                            <FaTrash />
+                                            <FaTrash className="w-4 h-4" />
                                         </button>
                                     </div>
                                 </td>

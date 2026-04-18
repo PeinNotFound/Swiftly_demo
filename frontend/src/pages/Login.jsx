@@ -17,6 +17,12 @@ const Login = () => {
   const [showOtp, setShowOtp] = useState(false);
   const [emailForOtp, setEmailForOtp] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  
+  // Suspension state
+  const [showSuspended, setShowSuspended] = useState(false);
+  const [suspensionDetails, setSuspensionDetails] = useState(null);
+  const [appealMessage, setAppealMessage] = useState('');
+  const [appealChecking, setAppealChecking] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,6 +66,17 @@ const Login = () => {
         setShowOtp(true);
         setError(''); // Clear error to show OTP screen cleanly
       }
+
+      // Check for suspended freelancer
+      if (error.is_suspended) {
+        setSuspensionDetails({
+          reason: error.suspension_reason,
+          status: error.appeal_status,
+          token: error.token
+        });
+        setShowSuspended(true);
+        setError('');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -73,6 +90,34 @@ const Login = () => {
 
     const from = location.state?.from?.pathname || `/dashboard/${role}`;
     navigate(from, { replace: true });
+  };
+
+  const handleAppealSubmit = async (e) => {
+    e.preventDefault();
+    if (!appealMessage.trim()) return;
+
+    setAppealChecking(true);
+    try {
+        const response = await fetch('http://localhost:8000/api/freelancers/appeal', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${suspensionDetails.token}`,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ appeal_message: appealMessage })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            setSuspensionDetails(prev => ({...prev, status: 'pending'}));
+        } else {
+            setError(data.message || 'Failed to submit appeal');
+        }
+    } catch (err) {
+        setError('Failed to connect to server');
+    } finally {
+        setAppealChecking(false);
+    }
   };
 
   return (
@@ -93,7 +138,53 @@ const Login = () => {
               </div>
             )}
 
-            {showOtp ? (
+            {showSuspended ? (
+              <div className="space-y-6 text-center">
+                <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                   <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                   </svg>
+                </div>
+                <h3 className="text-xl font-medium text-white">Account Suspended</h3>
+                <p className="text-gray-400 text-sm">
+                  {suspensionDetails?.reason ? `Reason: ${suspensionDetails.reason}` : "Your account has been suspended by the administration."}
+                </p>
+
+                {suspensionDetails?.status === 'pending' ? (
+                  <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4">
+                     <p className="text-yellow-500 text-sm font-medium">Your appeal is currently under review by administrators. You will be notified once a decision is made.</p>
+                  </div>
+                ) : suspensionDetails?.status === 'rejected' ? (
+                  <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+                     <p className="text-red-500 text-sm font-medium">Your previous appeal was rejected. The suspension remains active.</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleAppealSubmit} className="mt-6 flex flex-col gap-4">
+                     <textarea
+                       className="w-full bg-gray-800/50 border border-gray-700 rounded-lg p-3 text-white focus:ring-yellow-500 focus:border-transparent resize-none h-24 text-sm"
+                       placeholder="Explain why your account should be reinstated..."
+                       value={appealMessage}
+                       onChange={(e) => setAppealMessage(e.target.value)}
+                       required
+                     />
+                     <button
+                       type="submit"
+                       disabled={appealChecking}
+                       className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-black bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50"
+                     >
+                       {appealChecking ? 'Submitting...' : 'Submit Appeal'}
+                     </button>
+                  </form>
+                )}
+                
+                <button
+                    onClick={() => { setShowSuspended(false); setFormData({...formData, password: ''}); }}
+                    className="mt-4 text-sm text-gray-500 hover:text-white"
+                >
+                    Back to login
+                </button>
+              </div>
+            ) : showOtp ? (
               <OtpVerification
                 email={emailForOtp}
                 onSuccess={handleOtpSuccess}

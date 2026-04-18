@@ -53,24 +53,33 @@ const AdminDashboard = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-black">
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="px-4 py-6 sm:px-0 flex justify-between items-center">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-                        <p className="mt-1 text-sm text-gray-600">
+                        <h1 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">Admin Dashboard</h1>
+                        <p className="mt-1 text-sm text-gray-400">
                             Manage your platform and monitor key metrics
                         </p>
                     </div>
                     <div className="flex items-center gap-4">
-                        <button className="p-2 text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                        <button 
+                            onClick={() => toast.info('You have no new notifications.', { icon: '🔔', theme: 'dark' })}
+                            className="p-2 text-gray-400 hover:text-yellow-400 transition-colors duration-200"
+                        >
                             <FaBell className="text-xl" />
                         </button>
-                        <button className="p-2 text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                        <button 
+                            onClick={() => toast.info('Admin settings panel coming in v2.0!', { icon: '⚙️', theme: 'dark' })}
+                            className="p-2 text-gray-400 hover:text-yellow-400 transition-colors duration-200"
+                        >
                             <FaCog className="text-xl" />
                         </button>
-                        <button className="p-2 text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                        <button 
+                            onClick={() => toast.info('Help Center is currently offline. Please refer to the doc.', { icon: '❓', theme: 'dark' })}
+                            className="p-2 text-gray-400 hover:text-yellow-400 transition-colors duration-200"
+                        >
                             <FaQuestionCircle className="text-xl" />
                         </button>
                     </div>
@@ -80,7 +89,7 @@ const AdminDashboard = () => {
                 <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                     <Link
                         to="/dashboard/admin/users"
-                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${isActivePath('/dashboard/admin/users') ? 'ring-2 ring-yellow-400' : ''
+                        className={`bg-gray-900/50 backdrop-blur-xl border border-gray-800 overflow-hidden shadow-lg rounded-xl transition-all duration-300 hover:shadow-yellow-500/10 hover:border-yellow-500/50 ${isActivePath('/dashboard/admin/users') ? 'ring-2 ring-yellow-400' : ''
                             }`}
                     >
                         <div className="p-5">
@@ -90,10 +99,10 @@ const AdminDashboard = () => {
                                 </div>
                                 <div className="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt className="text-sm font-medium text-gray-500 truncate">
+                                        <dt className="text-sm font-medium text-gray-400 truncate">
                                             Total Users
                                         </dt>
-                                        <dd className="text-lg font-semibold text-gray-900">
+                                        <dd className="text-xl font-bold text-white">
                                             {stats.total_users}
                                         </dd>
                                     </dl>
@@ -104,7 +113,7 @@ const AdminDashboard = () => {
 
                     <Link
                         to="/dashboard/admin/freelancers"
-                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${isActivePath('/dashboard/admin/freelancers') ? 'ring-2 ring-yellow-400' : ''
+                        className={`bg-gray-900/50 backdrop-blur-xl border border-gray-800 overflow-hidden shadow-lg rounded-xl transition-all duration-300 hover:shadow-yellow-500/10 hover:border-yellow-500/50 ${isActivePath('/dashboard/admin/freelancers') ? 'ring-2 ring-yellow-400' : ''
                             }`}
                     >
                         <div className="p-5">
@@ -114,10 +123,10 @@ const AdminDashboard = () => {
                                 </div>
                                 <div className="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt className="text-sm font-medium text-gray-500 truncate">
+                                        <dt className="text-sm font-medium text-gray-400 truncate">
                                             Freelancers
                                         </dt>
-                                        <dd className="text-lg font-semibold text-gray-900">
+                                        <dd className="text-xl font-bold text-white">
                                             {stats.total_freelancers}
                                         </dd>
                                     </dl>
@@ -128,7 +137,7 @@ const AdminDashboard = () => {
 
                     <Link
                         to="/dashboard/admin/jobs"
-                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${isActivePath('/dashboard/admin/jobs') ? 'ring-2 ring-yellow-400' : ''
+                        className={`bg-gray-900/50 backdrop-blur-xl border border-gray-800 overflow-hidden shadow-lg rounded-xl transition-all duration-300 hover:shadow-yellow-500/10 hover:border-yellow-500/50 ${isActivePath('/dashboard/admin/jobs') ? 'ring-2 ring-yellow-400' : ''
                             }`}
                     >
                         <div className="p-5">
@@ -138,10 +147,10 @@ const AdminDashboard = () => {
                                 </div>
                                 <div className="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt className="text-sm font-medium text-gray-500 truncate">
+                                        <dt className="text-sm font-medium text-gray-400 truncate">
                                             Active Jobs
                                         </dt>
-                                        <dd className="text-lg font-semibold text-gray-900">
+                                        <dd className="text-xl font-bold text-white">
                                             {stats.active_jobs}
                                         </dd>
                                     </dl>
@@ -150,18 +159,7 @@ const AdminDashboard = () => {
                         </div>
                     </Link>
 
-                </div>
-
-                {/* Quick Access Cards */}
-                <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                    {/* ... (previous cards) ... */}
-                    {/* I will append the NEW card logic carefully by finding the END of the previous card div and appending after it, OR by replacing the entire grid container content if easier, but replacing partially is safer if I can find a unique anchor. The last card was "Total Revenue". */}
-
-                    {/* Actually, the file content shows "Total Revenue" card ends at line 173. The grid closes at 174. */}
-
-                    {/* Let's try to match the "Total Revenue" card and append after it. */}
-
-                    <div className="bg-white overflow-hidden shadow rounded-lg">
+                    <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-800 overflow-hidden shadow-lg rounded-xl">
                         <div className="p-5">
                             <div className="flex items-center">
                                 <div className="flex-shrink-0">
@@ -169,10 +167,10 @@ const AdminDashboard = () => {
                                 </div>
                                 <div className="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt className="text-sm font-medium text-gray-500 truncate">
+                                        <dt className="text-sm font-medium text-gray-400 truncate">
                                             Total Revenue
                                         </dt>
-                                        <dd className="text-lg font-semibold text-gray-900">
+                                        <dd className="text-xl font-bold text-white">
                                             ${stats.total_revenue.toLocaleString()}
                                         </dd>
                                     </dl>
@@ -183,7 +181,7 @@ const AdminDashboard = () => {
 
                     <Link
                         to="/dashboard/admin/verifications"
-                        className={`bg-white overflow-hidden shadow rounded-lg transition-all duration-200 hover:shadow-lg ${isActivePath('/dashboard/admin/verifications') ? 'ring-2 ring-yellow-400' : ''
+                        className={`bg-gray-900/50 backdrop-blur-xl border border-gray-800 overflow-hidden shadow-lg rounded-xl transition-all duration-300 hover:shadow-yellow-500/10 hover:border-yellow-500/50 ${isActivePath('/dashboard/admin/verifications') ? 'ring-2 ring-yellow-400' : ''
                             }`}
                     >
                         <div className="p-5">
@@ -193,10 +191,10 @@ const AdminDashboard = () => {
                                 </div>
                                 <div className="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt className="text-sm font-medium text-gray-500 truncate">
+                                        <dt className="text-sm font-medium text-gray-400 truncate">
                                             Pending Verifs
                                         </dt>
-                                        <dd className="text-lg font-semibold text-gray-900">
+                                        <dd className="text-xl font-bold text-white">
                                             {stats.pending_verifications}
                                         </dd>
                                     </dl>
@@ -220,29 +218,29 @@ const AdminDashboard = () => {
                             element={
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                     {/* Recent Activity */}
-                                    <div className="bg-white rounded-lg shadow p-6">
-                                        <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
+                                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl shadow-lg p-6">
+                                        <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
                                         <div className="space-y-4">
-                                            <div className="flex items-center justify-between border-b pb-4">
+                                            <div className="flex items-center justify-between border-b border-gray-800 pb-4">
                                                 <div className="flex items-center">
-                                                    <div className="bg-yellow-100 p-2 rounded-full mr-4">
+                                                    <div className="bg-yellow-500/10 p-3 rounded-full mr-4 border border-yellow-500/20">
                                                         <FaUserCog className="text-yellow-400" />
                                                     </div>
                                                     <div>
-                                                        <p className="font-medium">New User Registration</p>
-                                                        <p className="text-gray-500 text-sm">John Doe joined the platform</p>
+                                                        <p className="font-medium text-gray-200">New User Registration</p>
+                                                        <p className="text-gray-400 text-sm">John Doe joined the platform</p>
                                                     </div>
                                                 </div>
                                                 <span className="text-gray-500 text-sm">2 hours ago</span>
                                             </div>
-                                            <div className="flex items-center justify-between border-b pb-4">
+                                            <div className="flex items-center justify-between border-b border-gray-800 pb-4">
                                                 <div className="flex items-center">
-                                                    <div className="bg-yellow-100 p-2 rounded-full mr-4">
+                                                    <div className="bg-yellow-500/10 p-3 rounded-full mr-4 border border-yellow-500/20">
                                                         <FaBriefcase className="text-yellow-400" />
                                                     </div>
                                                     <div>
-                                                        <p className="font-medium">New Job Posted</p>
-                                                        <p className="text-gray-500 text-sm">Website Development Project</p>
+                                                        <p className="font-medium text-gray-200">New Job Posted</p>
+                                                        <p className="text-gray-400 text-sm">Website Development Project</p>
                                                     </div>
                                                 </div>
                                                 <span className="text-gray-500 text-sm">5 hours ago</span>
@@ -251,26 +249,26 @@ const AdminDashboard = () => {
                                     </div>
 
                                     {/* Quick Actions */}
-                                    <div className="bg-white rounded-lg shadow p-6">
-                                        <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+                                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl shadow-lg p-6">
+                                        <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
                                         <div className="space-y-3">
                                             <Link
                                                 to="/dashboard/admin/users"
-                                                className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                                                className="flex items-center p-3 rounded-lg border border-transparent hover:border-gray-700 hover:bg-gray-800/50 text-gray-300 transition-all duration-200"
                                             >
                                                 <FaUserCog className="text-yellow-400 mr-3" />
                                                 <span>Manage Users</span>
                                             </Link>
                                             <Link
                                                 to="/dashboard/admin/freelancers"
-                                                className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                                                className="flex items-center p-3 rounded-lg border border-transparent hover:border-gray-700 hover:bg-gray-800/50 text-gray-300 transition-all duration-200"
                                             >
                                                 <FaUserTie className="text-yellow-400 mr-3" />
                                                 <span>Manage Freelancers</span>
                                             </Link>
                                             <Link
                                                 to="/dashboard/admin/jobs"
-                                                className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                                                className="flex items-center p-3 rounded-lg border border-transparent hover:border-gray-700 hover:bg-gray-800/50 text-gray-300 transition-all duration-200"
                                             >
                                                 <FaBriefcase className="text-yellow-400 mr-3" />
                                                 <span>Manage Jobs</span>

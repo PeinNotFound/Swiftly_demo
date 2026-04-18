@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/freelancers/resume/parse', [FreelancerController::class, 'parseResume']);
         Route::post('/freelancers/verification/request', [FreelancerController::class, 'requestVerification']);
         Route::post('/freelancers/onboarding/complete', [FreelancerController::class, 'completeOnboarding']);
+        Route::post('/freelancers/appeal', [FreelancerController::class, 'submitAppeal']);
     });
 
     // Client routes
@@ -79,6 +80,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::post('/freelancers/{id}/reject', [FreelancerController::class, 'reject']);
     Route::post('/freelancers/{id}/verify', [FreelancerController::class, 'verify']);
     Route::post('/freelancers/{id}/suspend', [FreelancerController::class, 'suspend']);
+    Route::post('/freelancers/{id}/unsuspend', [FreelancerController::class, 'unsuspend']);
 });
 
 Route::get('/mongo-test', function () {
