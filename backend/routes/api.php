@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\JobController;
+use App\Http\Controllers\Api\FreelancerDashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -60,6 +61,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:freelancer')->group(function () {
         Route::get('/freelancers/profile', [ProfileController::class, 'getFreelancerProfile']);
         Route::put('/freelancers/profile', [ProfileController::class, 'updateFreelancerProfile']);
+
+        // Dashboard
+        Route::get('/freelancer/dashboard', [FreelancerDashboardController::class, 'index']);
 
         // Verification & Resume
         Route::post('/freelancers/resume/parse', [FreelancerController::class, 'parseResume']);

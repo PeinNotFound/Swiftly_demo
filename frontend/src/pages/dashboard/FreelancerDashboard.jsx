@@ -1,29 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { FaTasks, FaMoneyBillWave, FaStar, FaChartLine, FaCheckCircle, FaClock, FaBriefcase } from 'react-icons/fa';
+import { FaTasks, FaMoneyBillWave, FaStar, FaChartLine, FaCheckCircle, FaClock, FaBriefcase, FaSpinner } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { freelancerService } from '../../services/freelancerService';
 
 const FreelancerDashboard = () => {
     const { user } = useAuth();
-    
-    // In a real app, these would be fetched via an API
-    const [stats, setStats] = useState({
-        activeProjects: 12,
-        earnings: 2450,
-        rating: 4.8,
-        completionRate: 95
-    });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [dashData, setDashData] = useState(null);
 
-    const recentActivity = [
-        { id: 1, action: 'Payment Received', project: 'E-commerce Website', amount: '$450', time: '2 hours ago', icon: FaMoneyBillWave, color: 'text-green-400', bg: 'bg-green-400/10' },
-        { id: 2, action: 'Project Completed', project: 'Mobile App UI', time: '1 day ago', icon: FaCheckCircle, color: 'text-blue-400', bg: 'bg-blue-400/10' },
-        { id: 3, action: 'New Milestone Reached', project: 'Backend API integration', time: '3 days ago', icon: FaTasks, color: 'text-yellow-400', bg: 'bg-yellow-400/10' }
-    ];
+    useEffect(() => {
+        const fetchDashboard = async () => {
+            try {
+                setLoading(true);
+                const data = await freelancerService.getDashboard();
+                setDashData(data);
+            } catch (err) {
+                setError('Failed to load dashboard data.');
+                toast.error('Failed to load dashboard data.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDashboard();
+    }, []);
 
-    const activeJobs = [
-        { id: 1, title: 'Website Redesign', client: 'TechCorp Inc.', status: 'In Progress', progress: 65, dueDate: '2026-05-15' },
-        { id: 2, title: 'Mobile App Development', client: 'StartUp LLC', status: 'In Review', progress: 90, dueDate: '2026-05-02' }
-    ];
+    if (loading) return (
+        <div className="min-h-screen bg-black flex items-center justify-center">
+            <div className="text-center">
+                <FaSpinner className="text-yellow-400 text-5xl animate-spin mx-auto mb-4" />
+                <p className="text-gray-400">Loading your dashboard...</p>
+            </div>
+        </div>
+    );
+
+    if (error) return (
+        <div className="min-h-screen bg-black flex items-center justify-center">
+            <p className="text-red-400 text-xl">{error}</p>
+        </div>
+    );
+
+    const stats = dashData?.stats ?? {};
+    const activeJobs = dashData?.active_jobs ?? [];
+    const recentActivity = dashData?.recent_activity ?? [];
+    const skills = dashData?.skills ?? [];
 
     return (
         <div className="min-h-screen bg-black">
@@ -52,7 +73,7 @@ const FreelancerDashboard = () => {
                             </div>
                             <div>
                                 <p className="text-gray-400 text-sm font-medium mb-1">Active Projects</p>
-                                <h3 className="text-3xl font-bold text-white">{stats.activeProjects}</h3>
+                                <h3 className="text-3xl font-bold text-white">{stats.active_projects ?? 0}</h3>
                             </div>
                         </div>
                     </div>
@@ -64,7 +85,7 @@ const FreelancerDashboard = () => {
                             </div>
                             <div>
                                 <p className="text-gray-400 text-sm font-medium mb-1">Total Earnings</p>
-                                <h3 className="text-3xl font-bold text-white">${stats.earnings.toLocaleString()}</h3>
+                                <h3 className="text-3xl font-bold text-white">${(stats.total_earnings ?? 0).toLocaleString()}</h3>
                             </div>
                         </div>
                     </div>
@@ -76,7 +97,7 @@ const FreelancerDashboard = () => {
                             </div>
                             <div>
                                 <p className="text-gray-400 text-sm font-medium mb-1">Average Rating</p>
-                                <h3 className="text-3xl font-bold text-white">{stats.rating}</h3>
+                                <h3 className="text-3xl font-bold text-white">{stats.average_rating ?? '—'}</h3>
                             </div>
                         </div>
                     </div>
@@ -88,7 +109,7 @@ const FreelancerDashboard = () => {
                             </div>
                             <div>
                                 <p className="text-gray-400 text-sm font-medium mb-1">Completion Rate</p>
-                                <h3 className="text-3xl font-bold text-white">{stats.completionRate}%</h3>
+                                <h3 className="text-3xl font-bold text-white">{stats.completion_rate ?? 0}%</h3>
                             </div>
                         </div>
                     </div>
@@ -114,7 +135,9 @@ const FreelancerDashboard = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-800">
-                                        {activeJobs.map(job => (
+                                        {activeJobs.length === 0 ? (
+                                            <tr><td colSpan={4} className="py-8 text-center text-gray-500">No active projects right now.</td></tr>
+                                        ) : activeJobs.map(job => (
                                             <tr key={job.id} className="hover:bg-gray-800/30 transition-colors">
                                                 <td className="py-4">
                                                     <p className="text-white font-semibold">{job.title}</p>
@@ -132,7 +155,7 @@ const FreelancerDashboard = () => {
                                                 <td className="py-4">
                                                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
                                                         <FaClock className="text-gray-400" />
-                                                        {new Date(job.dueDate).toLocaleDateString()}
+                                                        {job.due_date ? new Date(job.due_date).toLocaleDateString() : 'N/A'}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -146,7 +169,9 @@ const FreelancerDashboard = () => {
                         <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-2xl p-6 shadow-lg">
                             <h2 className="text-xl font-bold text-white mb-6">Your Top Skills</h2>
                             <div className="flex flex-wrap gap-2">
-                                {['React', 'Node.js', 'UI/UX Design', 'TailwindCSS'].map(skill => (
+                                {skills.length === 0 ? (
+                                    <p className="text-gray-500 text-sm">No skills added yet.</p>
+                                ) : skills.map(skill => (
                                     <span key={skill} className="bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 px-4 py-2 rounded-xl text-sm font-semibold">
                                         {skill}
                                     </span>
@@ -159,19 +184,29 @@ const FreelancerDashboard = () => {
                     <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-2xl p-6 shadow-lg h-fit">
                         <h2 className="text-xl font-bold text-white mb-6">Recent Activity</h2>
                         
-                        <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-800 before:to-transparent">
-                            {recentActivity.map((activity, idx) => (
-                                <div key={activity.id} className="relative flex items-start gap-4">
-                                    <div className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-gray-800 bg-gray-900 ${activity.color}`}>
-                                        <activity.icon className="w-4 h-4" />
+                        <div className="space-y-6">
+                            {recentActivity.length === 0 ? (
+                                <p className="text-gray-500 text-sm">No recent activity.</p>
+                            ) : recentActivity.map((activity, idx) => {
+                                const isPayment = activity.type === 'payment';
+                                const IconComp = isPayment ? FaMoneyBillWave : FaCheckCircle;
+                                const colorClass = isPayment ? 'text-green-400' : 'text-blue-400';
+                                return (
+                                    <div key={idx} className="relative flex items-start gap-4">
+                                        <div className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-gray-800 bg-gray-900 ${colorClass}`}>
+                                            <IconComp className="w-4 h-4" />
+                                        </div>
+                                        <div className="flex-1 pt-1">
+                                            <p className="text-sm font-bold text-white">
+                                                {activity.action}
+                                                {activity.amount && <span className="text-green-400 ml-1">{activity.amount}</span>}
+                                            </p>
+                                            <p className="text-xs text-gray-400 mt-1">{activity.project}</p>
+                                            <p className="text-xs text-gray-500 mt-2 font-medium">{activity.time}</p>
+                                        </div>
                                     </div>
-                                    <div className="flex-1 pt-1">
-                                        <p className="text-sm font-bold text-white">{activity.action} {activity.amount && <span className="text-green-400 ml-1">{activity.amount}</span>}</p>
-                                        <p className="text-xs text-gray-400 mt-1">{activity.project}</p>
-                                        <p className="text-xs text-gray-500 mt-2 font-medium">{activity.time}</p>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                         <button className="w-full mt-6 py-2.5 text-sm font-medium text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-800 rounded-xl transition-colors border border-gray-700">
                             View All Activity

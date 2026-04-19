@@ -20,6 +20,7 @@ class Freelancer extends Model
         'phone',
         'education',
         'experience',
+        'experience_years',
         'languages',
         'completed_projects_count',
         'average_rating',
@@ -31,19 +32,20 @@ class Freelancer extends Model
     ];
 
     protected $casts = [
-        'is_approved' => 'boolean',
-        'is_verified' => 'boolean',
-        'is_suspended' => 'boolean',
-        'skills' => 'array',
-        'hourly_rate' => 'float',
-        'availability' => 'array',
-        'education' => 'array',
-        'experience' => 'array',
-        'languages' => 'array',
-        'portfolio' => 'array',
+        'is_approved'              => 'boolean',
+        'is_verified'              => 'boolean',
+        'is_suspended'             => 'boolean',
+        'skills'                   => 'array',
+        'hourly_rate'              => 'float',
+        'availability'             => 'array',
+        'education'                => 'array',
+        'experience'               => 'array',
+        'languages'                => 'array',
+        'portfolio'                => 'array',
         'completed_projects_count' => 'integer',
-        'average_rating' => 'float',
-        'is_onboarded' => 'boolean'
+        'average_rating'           => 'float',
+        'experience_years'         => 'integer',
+        'is_onboarded'             => 'boolean'
     ];
 
     public function user(): BelongsTo

@@ -33,12 +33,15 @@ class User extends Authenticatable
 
     /**
      * The attributes that should be hidden for serialization.
+     * otp_code is NEVER exposed in API responses.
      *
      * @var array<int, string>
      */
     protected $hidden = [
         'password',
         'remember_token',
+        'otp_code',
+        'otp_expires_at',
     ];
 
     /**
@@ -54,29 +57,6 @@ class User extends Authenticatable
         'otp_expires_at' => 'datetime',
     ];
 
-    /**
-     * Boot the model.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::updating(function ($user) {
-            Log::info('User being updated:', [
-                'user_id' => $user->id,
-                'changes' => $user->getDirty(),
-                'original' => $user->getOriginal()
-            ]);
-        });
-
-        static::updated(function ($user) {
-            Log::info('User updated:', [
-                'user_id' => $user->id,
-                'changes' => $user->getChanges(),
-                'original' => $user->getOriginal()
-            ]);
-        });
-    }
 
     /**
      * Check if user is an admin

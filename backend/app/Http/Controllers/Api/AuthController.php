@@ -24,16 +24,17 @@ class AuthController extends Controller
             'role' => 'required|in:freelancer,client',
         ]);
 
-        $otp = rand(100000, 999999);
+        // Use CSPRNG for unpredictable OTP, then hash before storing
+        $otp = (string) random_int(100000, 999999);
         $otpExpiresAt = Carbon::now()->addMinutes(10);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'otp_code' => $otp,
-            'otp_expires_at' => $otpExpiresAt,
+            'name'              => $request->name,
+            'email'             => $request->email,
+            'password'          => Hash::make($request->password),
+            'role'              => $request->role,
+            'otp_code'          => Hash::make($otp),  // stored as hash, never plain text
+            'otp_expires_at'    => $otpExpiresAt,
             'is_email_verified' => false,
         ]);
 
@@ -110,8 +111,9 @@ class AuthController extends Controller
         // Check Email Verification
         if (!$user->is_email_verified) {
             // Generate and resend OTP
-            $otp = rand(100000, 999999);
-            $user->otp_code = $otp;
+            // Use CSPRNG and hash before storing
+            $otp = (string) random_int(100000, 999999);
+            $user->otp_code = Hash::make($otp);
             $user->otp_expires_at = Carbon::now()->addMinutes(10);
             $user->save();
 
@@ -172,7 +174,8 @@ class AuthController extends Controller
             return response()->json(['success' => true, 'message' => 'Email already verified.']);
         }
 
-        if ($user->otp_code !== $request->otp) {
+        // Verify OTP by comparing hashes (timing-safe via Hash::check)
+        if (!Hash::check($request->otp, $user->otp_code)) {
             return response()->json(['success' => false, 'message' => 'Invalid verification code.'], 400);
         }
 
@@ -221,8 +224,9 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'message' => 'Email already verified.'], 400);
         }
 
-        $otp = rand(100000, 999999);
-        $user->otp_code = $otp;
+        // Use CSPRNG and hash before storing
+        $otp = (string) random_int(100000, 999999);
+        $user->otp_code = Hash::make($otp);
         $user->otp_expires_at = Carbon::now()->addMinutes(10);
         $user->save();
 
