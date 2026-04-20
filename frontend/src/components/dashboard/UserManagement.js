@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaSearch, FaFilter } from 'react-icons/fa';
 import { adminService } from '../../services/adminService';
 import { toast } from 'react-toastify';
+import { useAuth } from '../../contexts/AuthContext';
 
 const UserManagement = () => {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -172,18 +174,24 @@ const UserManagement = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => handleEdit(user)}
-                        className="text-yellow-500 hover:text-yellow-400 transition-colors duration-200"
-                      >
-                        <FaEdit className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(user.id)}
-                        className="text-red-500 hover:text-red-400 transition-colors duration-200"
-                      >
-                        <FaTrash className="w-5 h-5" />
-                      </button>
+                      {!(user.role === 'admin' && String(user.id) !== String(currentUser?.id)) && (
+                        <button
+                          onClick={() => handleEdit(user)}
+                          className="text-yellow-500 hover:text-yellow-400 transition-colors duration-200"
+                          title="Edit User"
+                        >
+                          <FaEdit className="w-5 h-5" />
+                        </button>
+                      )}
+                      {user.role !== 'admin' && (
+                        <button
+                          onClick={() => handleDelete(user.id)}
+                          className="text-red-500 hover:text-red-400 transition-colors duration-200"
+                          title="Delete User"
+                        >
+                          <FaTrash className="w-5 h-5" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

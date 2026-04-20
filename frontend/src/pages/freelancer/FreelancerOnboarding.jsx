@@ -80,7 +80,7 @@ const customStyles = {
 
 
 const FreelancerOnboarding = () => {
-    const { user, updateUser } = useAuth();
+    const { user, updateUser, refreshUser } = useAuth();
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -110,38 +110,45 @@ const FreelancerOnboarding = () => {
     const nextStep = () => setStep(step + 1);
     const prevStep = () => setStep(step - 1);
 
-    const extractSkills = (text) => {
-        const commonTech = ['React', 'JavaScript', 'Node.js', 'PHP', 'Laravel', 'Python', 'Java', 'SQL', 'HTML', 'CSS', 'Tailwind', 'AWS', 'Docker', 'Figma', 'TypeScript', 'Vue'];
-        return commonTech.filter(skill => text.toLowerCase().includes(skill.toLowerCase()));
-    };
-
     const handleClientSideParsing = async () => {
         if (!resumeFile) return;
         setLoading(true);
         setParseError(null);
 
-        try {
-            const text = await pdfToText(resumeFile);
-            const extractedSkills = extractSkills(text);
+        const formData = new FormData();
+        formData.append('resume', resumeFile);
 
-            if (extractedSkills.length > 0) {
-                toast.success("Resume parsed! We've pre-filled some data.");
+        try {
+            const token = localStorage.getItem('token');
+            const res = await axios.post('http://localhost:8000/api/freelancers/resume/parse', formData, {
+                headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` }
+            });
+
+            if (res.data.success && res.data.data) {
+                const { skills, email, experience_years } = res.data.data;
+                const skillsString = Array.isArray(skills) ? skills.join(', ') : '';
+                
+                let expLevel = profileData.freelancer_level;
+                if (experience_years > 5) expLevel = 'expert';
+                else if (experience_years > 2) expLevel = 'intermediate';
+                
                 setProfileData(prev => ({
                     ...prev,
-                    skills: extractedSkills.join(', ')
+                    phone: prev.phone || '', // Keep existing or empty
+                    skills: skillsString,
+                    freelancer_level: expLevel
                 }));
+                toast.success("Resume parsed! We've pre-filled some data.");
             } else {
                  toast.info("Resumed processed, but please fill in your details manually.");
             }
-            nextStep();
-
         } catch (error) {
             console.error("PDF Parsing error:", error);
             setParseError("Could not automatically read the file. Please enter details manually.");
             toast.warning("Could not read PDF. Manual entry enabled.");
-            nextStep();
         } finally {
             setLoading(false);
+            nextStep();
         }
     };
 
@@ -161,6 +168,9 @@ const FreelancerOnboarding = () => {
     const updateEducation = (index, field, value) => {
         const newEdu = [...profileData.education];
         newEdu[index][field] = value;
+        if (field === 'is_current' && value === true) {
+            newEdu[index].end_date = '';
+        }
         setProfileData({ ...profileData, education: newEdu });
     };
 
@@ -176,6 +186,9 @@ const FreelancerOnboarding = () => {
     const updateExperience = (index, field, value) => {
         const newExp = [...profileData.experience];
         newExp[index][field] = value;
+        if (field === 'is_current' && value === true) {
+            newExp[index].end_date = '';
+        }
         setProfileData({ ...profileData, experience: newExp });
     };
 
@@ -206,11 +219,8 @@ const FreelancerOnboarding = () => {
 
             toast.success("Welcome to Swiftly, " + user?.name + "!");
 
-            if (user && user.freelancer) {
-                updateUser({
-                    freelancer: { ...user.freelancer, is_onboarded: true }
-                });
-            }
+            // Aggressively fetch latest data from backend so verification status updates
+            await refreshUser();
 
             navigate("/dashboard/freelancer");
 
@@ -369,11 +379,17 @@ const FreelancerOnboarding = () => {
                                                         <div className="grid grid-cols-2 gap-4 md:col-span-2">
                                                             <div>
                                                                 <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider font-semibold">Start Date</label>
-                                                                <input type="date" value={edu.start_date} onChange={(e) => updateEducation(index, 'start_date', e.target.value)} className="w-full bg-[#111827] border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-yellow-500 transition-colors" />
+                                                                <input type="date" value={edu.start_date} onChange={(e) => updateEducation(index, 'start_date', e.target.value)} className="w-full bg-[#111827] border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-yellow-500 transition-colors [color-scheme:dark]" />
                                                             </div>
                                                             <div>
-                                                                <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider font-semibold">End Date</label>
-                                                                <input type="date" value={edu.end_date} onChange={(e) => updateEducation(index, 'end_date', e.target.value)} className="w-full bg-[#111827] border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-yellow-500 transition-colors" />
+                                                                <label className="flex justify-between items-center text-xs text-gray-400 mb-1.5 uppercase tracking-wider font-semibold">
+                                                                    <span>End Date</span>
+                                                                    <label className="flex items-center gap-1.5 lowercase normal-case tracking-normal text-gray-400 cursor-pointer hover:text-white transition-colors">
+                                                                        <input type="checkbox" checked={edu.is_current || false} onChange={(e) => updateEducation(index, 'is_current', e.target.checked)} className="accent-yellow-500" />
+                                                                        I currently study here
+                                                                    </label>
+                                                                </label>
+                                                                <input type="date" value={edu.end_date} disabled={edu.is_current} onChange={(e) => updateEducation(index, 'end_date', e.target.value)} className="w-full bg-[#111827] border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-yellow-500 transition-colors [color-scheme:dark] disabled:opacity-50 disabled:cursor-not-allowed" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -420,11 +436,17 @@ const FreelancerOnboarding = () => {
                                                         <div className="grid grid-cols-2 gap-4 md:col-span-2">
                                                             <div>
                                                                 <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider font-semibold">Start Date</label>
-                                                                <input type="date" value={exp.start_date} onChange={(e) => updateExperience(index, 'start_date', e.target.value)} className="w-full bg-[#111827] border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-yellow-500 transition-colors" />
+                                                                <input type="date" value={exp.start_date} onChange={(e) => updateExperience(index, 'start_date', e.target.value)} className="w-full bg-[#111827] border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-yellow-500 transition-colors [color-scheme:dark]" />
                                                             </div>
                                                             <div>
-                                                                <label className="block text-xs text-gray-400 mb-1.5 uppercase tracking-wider font-semibold">End Date</label>
-                                                                <input type="date" value={exp.end_date} onChange={(e) => updateExperience(index, 'end_date', e.target.value)} className="w-full bg-[#111827] border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-yellow-500 transition-colors" />
+                                                                <label className="flex justify-between items-center text-xs text-gray-400 mb-1.5 uppercase tracking-wider font-semibold">
+                                                                    <span>End Date</span>
+                                                                    <label className="flex items-center gap-1.5 lowercase normal-case tracking-normal text-gray-400 cursor-pointer hover:text-white transition-colors">
+                                                                        <input type="checkbox" checked={exp.is_current || false} onChange={(e) => updateExperience(index, 'is_current', e.target.checked)} className="accent-yellow-500" />
+                                                                        I currently work here
+                                                                    </label>
+                                                                </label>
+                                                                <input type="date" value={exp.end_date} disabled={exp.is_current} onChange={(e) => updateExperience(index, 'end_date', e.target.value)} className="w-full bg-[#111827] border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-yellow-500 transition-colors [color-scheme:dark] disabled:opacity-50 disabled:cursor-not-allowed" />
                                                             </div>
                                                         </div>
                                                     </div>

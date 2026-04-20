@@ -13,12 +13,14 @@ class VerificationRequest extends Model
         'certificate_paths',
         'project_links',
         'status',
-        'admin_notes'
+        'admin_notes',
+        'rejection_count',
     ];
 
     protected $casts = [
         'certificate_paths' => 'array',
         'project_links' => 'array',
+        'rejection_count' => 'integer',
     ];
 
     public function freelancer(): BelongsTo

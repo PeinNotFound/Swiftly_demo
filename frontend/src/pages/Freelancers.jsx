@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiSearch, FiFilter, FiStar, FiMapPin, FiDollarSign } from 'react-icons/fi';
+import { FiSearch, FiFilter, FiStar, FiMapPin, FiDollarSign, FiCheckCircle } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { freelancerService } from '../services/freelancerService';
 
@@ -139,9 +139,14 @@ const Freelancers = () => {
                   className="w-16 h-16 rounded-xl object-cover"
                 />
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-white group-hover:text-yellow-400 transition-colors">
-                    {freelancer.name}
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-semibold text-white group-hover:text-yellow-400 transition-colors">
+                      {freelancer.name}
+                    </h3>
+                    {freelancer.is_verified && (
+                      <FiCheckCircle className="text-blue-400 flex-shrink-0" title="Verified Freelancer" />
+                    )}
+                  </div>
                   <p className="text-gray-400">{freelancer.title || 'Freelancer'}</p>
                 </div>
               </div>

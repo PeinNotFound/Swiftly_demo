@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiStar, FiMapPin, FiDollarSign, FiMessageSquare, FiMail, FiClock, FiCode, FiX } from 'react-icons/fi';
-import { adminService } from '../services/adminService';
+import { FiStar, FiMapPin, FiDollarSign, FiMessageSquare, FiMail, FiClock, FiCode, FiX, FiCheckCircle } from 'react-icons/fi';
+import { freelancerService } from '../services/freelancerService';
 import authService from '../services/authService';
 import Chat from '../components/chat/Chat';
 
@@ -23,10 +23,9 @@ const FreelancerProfile = () => {
         console.log('Stored User:', storedUser);
         setCurrentUser(storedUser);
 
-        // Fetch freelancer data
-        const response = await adminService.getFreelancers();
+        // Fetch freelancer data from public endpoint
+        const response = await freelancerService.getFreelancers();
         const found = response.freelancers.find(f => String(f.id) === String(id));
-        console.log('Freelancer:', found);
         setFreelancer(found);
         setError(null);
       } catch (err) {
@@ -100,7 +99,14 @@ const FreelancerProfile = () => {
               className="w-32 h-32 rounded-xl object-cover border-2 border-yellow-400"
           />
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-white mb-2">{freelancer.name}</h1>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-3xl font-bold text-white">{freelancer.name}</h1>
+                {freelancer.is_verified && (
+                  <div className="flex items-center justify-center bg-blue-500/10 rounded-full p-1 border border-blue-500/20" title="Verified Freelancer">
+                    <FiCheckCircle className="text-blue-400 text-xl" />
+                  </div>
+                )}
+              </div>
               <p className="text-xl text-gray-400 mb-4">{freelancer.title || 'Freelancer'}</p>
               <div className="flex flex-wrap items-center gap-6 mb-4">
                 <div className="flex items-center text-yellow-400">

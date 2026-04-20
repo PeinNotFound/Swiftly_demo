@@ -28,6 +28,7 @@ import AdminDashboard from './pages/dashboard/AdminDashboard';
 import PostJob from './pages/PostJob';
 import FreelancerSettings from './pages/freelancer/FreelancerSettings';
 import FreelancerOnboarding from './pages/freelancer/FreelancerOnboarding';
+import VerificationPending from './pages/freelancer/VerificationPending';
 
 // ScrollToTop component
 function ScrollToTop() {
@@ -59,6 +60,32 @@ const OnboardingGuard = ({ children }) => {
 
   if (user?.role === 'freelancer' && !user?.freelancer?.is_onboarded) {
     return <Navigate to="/freelancer/onboarding" replace />;
+  }
+
+  // After onboarding, enforce verification gate
+  if (user?.role === 'freelancer') {
+    const vStatus = user?.verification_status;
+    const rejectionCount = user?.verification_rejection_count ?? 0;
+    const rejectionReason = user?.verification_rejection_reason;
+    const freelancer = user?.freelancer;
+    const appealStatus = freelancer?.appeal_status;
+
+    // Approved = let through
+    if (freelancer?.is_verified) return children;
+
+    // Has submitted verification — show pending/rejected intercept
+    if (vStatus === 'pending' || vStatus === 'rejected') {
+      return (
+        <VerificationPending
+          status={vStatus}
+          rejectionReason={rejectionReason}
+          rejectionCount={rejectionCount}
+          appealStatus={appealStatus}
+        />
+      );
+    }
+
+    // No submission yet — let through (EditProfile will show the CTA banner)
   }
 
   return children;

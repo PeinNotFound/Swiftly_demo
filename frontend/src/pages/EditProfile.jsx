@@ -276,6 +276,23 @@ const EditProfile = () => {
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold text-yellow-400">Professional Information</h2>
                 
+                {/* Verification Banner */}
+                {!user?.freelancer?.is_verified && (
+                  <div className="bg-yellow-400/10 border border-yellow-400/20 rounded-lg p-5 flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                    <div>
+                      <h3 className="text-yellow-400 font-medium mb-1">Verify Your Profile</h3>
+                      <p className="text-sm text-yellow-400/80">Get a verified badge to stand out to clients and increase your chances of getting hired.</p>
+                    </div>
+                    <button 
+                      type="button"
+                      onClick={() => navigate('/freelancer/settings')}
+                      className="shrink-0 px-4 py-2 bg-yellow-400 text-black text-sm font-bold rounded-lg hover:bg-yellow-500 transition-colors"
+                    >
+                      Request Verification
+                    </button>
+                  </div>
+                )}
+
                 <div>
                   <label htmlFor="bio" className="block text-sm font-medium text-gray-300">
                     Bio

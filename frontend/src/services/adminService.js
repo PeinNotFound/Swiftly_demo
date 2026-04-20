@@ -175,5 +175,16 @@ export const adminService = {
         } catch (error) {
             throw error.response?.data || error.message;
         }
+    },
+
+    rejectAppeal: async (freelancerId) => {
+        try {
+            const response = await axios.post(`${API_URL}/api/admin/freelancers/${freelancerId}/reject-appeal`, {}, {
+                headers: getAuthHeader()
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
     }
 }; 

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Models\VerificationRequest;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -105,6 +106,12 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
 
+        if ($user->role === 'admin' && $user->id !== auth()->id()) {
+            return response()->json([
+                'message' => 'Forbidden: You cannot modify another admin.'
+            ], 403);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => [
@@ -137,7 +144,13 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Prevent deleting the last admin
+        if ($user->role === 'admin') {
+            return response()->json([
+                'message' => 'Forbidden: Admin users cannot be deleted.'
+            ], 403);
+        }
+
+        // Prevent deleting the last admin (though we just blocked deleting ANY admin, keeping it as fallback logic)
         if ($user->role === 'admin' && User::where('role', 'admin')->count() <= 1) {
             return response()->json([
                 'message' => 'Cannot delete the last admin user'
@@ -203,6 +216,7 @@ class AdminController extends Controller
                     'certificate_urls' => collect($req->certificate_paths)->map(fn($p) => asset('storage/' . $p)),
                     'project_links' => $req->project_links,
                     'submitted_at' => $req->created_at,
+                    'rejection_count' => $req->rejection_count ?? 0,
                 ];
             });
 
@@ -224,19 +238,52 @@ class AdminController extends Controller
 
     public function rejectVerification(Request $request, $id)
     {
-        $req = VerificationRequest::findOrFail($id);
+        $request->validate(['reason' => 'required|string|min:5']);
+
+        $req = VerificationRequest::with(['freelancer.user'])->findOrFail($id);
+        $newCount = ($req->rejection_count ?? 0) + 1;
+
         $req->update([
             'status' => 'rejected',
-            'admin_notes' => $request->reason
+            'admin_notes' => $request->reason,
+            'rejection_count' => $newCount,
         ]);
 
-        if ($request->block_user) {
-            $user = clone $req->freelancer->user; // Reference the user
-            $user->update(['is_active' => false]);
-            $req->freelancer->update(['is_suspended' => true]);
+        $freelancer = $req->freelancer;
+        $user = $freelancer?->user;
+
+        if ($newCount >= 2) {
+            // 2nd rejection — auto-suspend and allow appeal
+            if ($freelancer) {
+                $freelancer->update([
+                    'is_suspended' => true,
+                    'suspension_reason' => 'Verification rejected twice: ' . $request->reason,
+                    'appeal_status' => 'none',
+                ]);
+            }
         }
 
-        return response()->json(['message' => 'Verification request rejected']);
+        return response()->json(['message' => 'Verification request rejected', 'rejection_count' => $newCount]);
+    }
+
+    /**
+     * Reject a freelancer appeal — bans their email permanently
+     */
+    public function rejectAppeal($id)
+    {
+        $freelancer = \App\Models\Freelancer::where('user_id', $id)->firstOrFail();
+        $user = $freelancer->user;
+
+        $freelancer->update([
+            'is_suspended' => true,
+            'appeal_status' => 'rejected',
+            'appeal_message' => null,
+        ]);
+
+        // Ban the email — blocked from logging in
+        $user->update(['is_blocked' => true]);
+
+        return response()->json(['message' => 'Appeal rejected and email banned']);
     }
 
     /**

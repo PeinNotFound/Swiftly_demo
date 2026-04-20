@@ -96,6 +96,18 @@ export const AuthProvider = ({ children }) => {
         });
     };
 
+    const refreshUser = async () => {
+        try {
+            const userData = await authService.getCurrentUser();
+            if (userData.success) {
+                setUser(userData.data.user);
+                localStorage.setItem('user', JSON.stringify(userData.data.user));
+            }
+        } catch (error) {
+            console.error('Failed to refresh user', error);
+        }
+    };
+
     const value = {
         user,
         loading,
@@ -103,6 +115,7 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         updateUser,
+        refreshUser,
         isAuthenticated: !!user,
         isAdmin: user?.role === 'admin',
         isFreelancer: user?.role === 'freelancer',

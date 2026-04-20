@@ -55,6 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/verification-requests', [AdminController::class, 'getVerificationRequests']);
         Route::post('/verification-requests/{id}/approve', [AdminController::class, 'approveVerification']);
         Route::post('/verification-requests/{id}/reject', [AdminController::class, 'rejectVerification']);
+
+        // Appeals
+        Route::post('/freelancers/{id}/reject-appeal', [AdminController::class, 'rejectAppeal']);
     });
 
     // Freelancer routes

@@ -6,26 +6,13 @@ use App\Models\Message;
 
 return new class extends Migration
 {
-    public function getConnection()
-    {
-        return 'mongodb';
-    }
-
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
-        // Example: create an index on userId and freelancerId
-        Schema::connection('mongodb')->table('messages', function ($collection) {
-            $collection->index(['userId' => 1, 'freelancerId' => 1]);
-        });
+        // Skipped MongoDB migration
     }
 
     public function down()
     {
-        Schema::connection('mongodb')->table('messages', function ($collection) {
-            $collection->dropIndex(['userId' => 1, 'freelancerId' => 1]);
-        });
+        // Skipped MongoDB migration
     }
 };

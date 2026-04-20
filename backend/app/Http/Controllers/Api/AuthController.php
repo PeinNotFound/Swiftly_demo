@@ -89,7 +89,16 @@ class AuthController extends Controller
             ]);
         }
 
-        // Hard ban
+        // Hard ban — email blocked by admin
+        if ($user->is_blocked) {
+            return response()->json([
+                'success' => false,
+                'error_code' => 'EMAIL_BANNED',
+                'message' => 'Your email address has been permanently banned from the platform.'
+            ], 403);
+        }
+
+        // Hard ban (legacy is_active check)
         if (isset($user->is_active) && $user->is_active === 0) {
             throw ValidationException::withMessages([
                 'email' => ['Your account has been permanently banned from the platform.'],
@@ -257,15 +266,20 @@ class AuthController extends Controller
         $user = $request->user();
         $userData = $user->toArray();
 
-        // Format user data
-        // Format user data
+        // Format profile picture
         if ($user->profile_picture) {
             $userData['profile_picture'] = asset('storage/profile_pictures/' . $user->profile_picture);
         }
 
         if ($user->role === 'freelancer') {
-            $user->load('freelancer');
+            $user->load(['freelancer.verificationRequest']);
             $userData['freelancer'] = $user->freelancer;
+
+            // Expose verification status cleanly for the frontend
+            $vr = $user->freelancer?->verificationRequest;
+            $userData['verification_status'] = $vr?->status ?? null;
+            $userData['verification_rejection_reason'] = ($vr?->status === 'rejected') ? $vr->admin_notes : null;
+            $userData['verification_rejection_count'] = $vr?->rejection_count ?? 0;
         }
 
         return response()->json([
